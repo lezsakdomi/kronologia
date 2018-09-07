@@ -29,6 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		console.error(e)
 	}
 
+	// Handle manual order set
+	try {
+		document.querySelectorAll('input[name$="[order]"]').forEach(orderInput => {
+			orderInput.addEventListener('change', (evt) => {
+				reorderStart()
+				findPositionAndPlace(evt.target.parentElement.parentElement)
+				reorderEnd()
+			})
+		})
+	} catch (e) {
+		console.error(e)
+	}
+
 	// Handle positioning buttons
 	try {
 		const buttonBehavior = {
