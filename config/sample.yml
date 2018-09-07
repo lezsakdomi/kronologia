@@ -1,0 +1,42 @@
+%YAML 1.2
+# Rename (or copy) this file to local.yml and edit as appropriate.
+---
+auth:
+  google:
+    module: passport-google-oauth # The regular google authentication turned down long ago :(
+    strategy: OAuth2Strategy
+    # Enable https://console.developers.google.com/apis/api/plus.googleapis.com, then
+    # gather these values from https://console.developers.google.com/apis/credentials/oauthclient
+    clientID: "123456789012-somethingverylong_lookatgivenurl.apps.googleusercontent.com"
+    clientSecret: "D0tW4ntt0pr0ViDEmy5Ecr3T"
+    # Do not forget to update both this URL and the one provided on Google API console when you change app domain
+    callbackURL: http://localhost:3000/auth/google
+    options:
+      # https://developers.google.com/+/web/api/rest/oauth#login-scopes
+      scope: ['profile']
+
+#  google: # using oAuth 1.0 rather than oAuth 2.0
+#    module: passport-google-oauth
+#    #strategy: OAuthStrategy # default
+#    consumerKey: GOOGLE_CONSUMER_KEY,
+#    consumerSecret: GOOGLE_CONSUMER_SECRET,
+#    callbackURL: http://localhost:3000/auth/google
+#    options:
+#      # https://developers.google.com/identity/protocols/OpenIDConnect#scope-param
+#      scope: 'https://www.google.com/m8/feeds'
+
+  facebook:
+    # https://developers.facebook.com/
+    clientID: FACEBOOK_APP_ID
+    clientSecret: FACEBOOK_APP_SECRET
+    callbackURL: http://localhost:3000/auth/facebook
+    options:
+      scope: 'read_stream'
+      #scope: ['read_stream', 'publish_actions']
+
+  twitter:
+    # https://dev.twitter.com/
+    consumerKey: TWITTER_CONSUMER_KEY
+    consumerSecret: TWITTER_CONSUMER_SECRET
+    callbackURL: http://localhost:3000/auth/twitter
+...

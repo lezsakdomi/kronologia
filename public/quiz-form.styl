@@ -1,0 +1,62 @@
+table
+	width 100%
+	@media (min-width: 650px)
+		width 650px
+
+tbody
+	display flex
+	flex-direction column
+
+tr
+	display flex
+
+td
+	display flex
+
+tr
+	transition background ease-in 2s, top ease 0.5s
+	position relative
+
+tr:hover
+	background var(--background-color, yellow)
+	transition background ease-out 1s, top ease 0.5s
+
+td:first-of-type
+	flex-grow 1
+
+input[name$='[order]']
+	width 4em
+
+input[name$='[answer]']
+	width 15em
+	transition width 0.2s ease-in-out
+	&:not(:focus)
+		width 5em
+		@media (min-width: 500px)
+			width unquote('calc(100vw - 500px + 4em)')
+		@media (min-width: 650px)
+			width 15em
+
+.down, .up
+	width 0
+	height 0
+	border-left 20px solid transparent
+	border-right @border-left
+
+.down
+	border-top 20px solid #48f
+
+.up
+	border-bottom 20px solid #48f
+
+input:invalid
+	box-shadow: 0 0 1.5px 1px red
+
+input:invalid:focus
+input:invalid:focusring
+	box-shadow: 0 0 2px 2px rgba(255, 0, 0, 0.4)
+
+/*
+input:invalid
+background #fee
+*/

@@ -1,0 +1,23 @@
+html
+	head
+		meta(name='viewport' content='width=device-width, initial-scale=1')
+		title= quiz ? quiz.title : "Quiz not found"
+		link(rel='stylesheet' href='/quiz-form.css')
+		script(src='/quiz-form.js')
+	body
+		unless quiz
+			p The specified quiz does not exists.
+			p You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
+		else
+			h1= quiz.title
+			form(action='check' method='post')
+				table
+					for eid in Object.keys(quiz.entries)
+						tr(style="--background-color: " + randomColor({seed: eid}))
+							td= quiz.entries[eid].question
+							td: input(type='text' name='entries[' + eid + '][answer]' placeholder="Answer")
+							td
+								input(type='number' name='entries[' + eid + '][order]' placeholder="Order")
+								.down
+								.up
+				input(type='submit' value='check')

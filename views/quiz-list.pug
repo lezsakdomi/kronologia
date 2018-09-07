@@ -1,0 +1,10 @@
+html
+	head
+		title Quiz list
+	body
+		ul
+			for quiz in quizzes
+				li: form
+					a(href=quiz._id)= quiz.title
+					| &nbsp;
+					button(formaction=quiz._id + '/form.html') form

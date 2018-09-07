@@ -1,0 +1,20 @@
+html
+	head
+		title Authenticate with Kronologia
+	body
+		h1 Authentication
+		p.
+			<b>This application is not GDPR ready.</b>
+			By proceeding you accept, that all information shared with this site
+			using one of the third party authentication providers will be stored
+			and used for various reasons in the future. You can check the saved
+			information at <a href="/auth/">/auth</a> and request deletion at
+			the site administrator. To predict, that what will be saved, please
+			refer to the <a href="http://www.passportjs.org/docs/profile/">
+			PassportJS documentation</a>. After login, a cookie will be saved
+			which identifies you. <i>By proceeding, you also sell your soul to
+			us.</i>
+		p The following authentication providers are available:
+		ul
+			for provider in validProviders
+				li: a(href=provider)= provider[0].toUpperCase() + provider.slice(1)

@@ -1,0 +1,9 @@
+%YAML1.2
+---
+acceptMultipart: true
+secret: 'keyboard cat' #TODO generate automatically
+secure: false #TODO
+session:
+  resave: false
+  saveUninitialized: false
+...

@@ -1,0 +1,6 @@
+.idea/workspace.xml
+config/local.yml
+node_modules/*
+public/view-form.css
+package-lock.json
+yarn.lock
