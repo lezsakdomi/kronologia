@@ -1,57 +1,56 @@
 document.addEventListener('DOMContentLoaded', () => {
-	try {
-		document.querySelectorAll('input[type=number][name$="[order]"]')
-			.forEach(input => {
-				const td = input.parentElement
-				const tr = td.parentElement
+	const tbody = document.querySelector('tbody')
 
-				input.addEventListener('change', (() => {
-					document.querySelectorAll('input[type=number][name$="[order]"]')
-						.forEach(input => {
-							const tr = input.parentElement.parentElement
-							tr.style.transition = 'none'
-							tr.style.position = 'inherit'
-							tr.lastOffsetTop = tr.offsetTop
-						})
-					tr.style.order = input.value
-					document.querySelectorAll('input[type=number][name$="[order]"]')
-						.forEach(input => {
-							const tr = input.parentElement.parentElement
-							tr.nextOffsetTop = tr.offsetTop
-							tr.style.top = tr.lastOffsetTop - tr.nextOffsetTop + 'px'
-							tr.style.position = 'relative'
-							fs(null, false, () => tr.style.transition = null,
-								() => tr.style.top = '0px')
-						})
-				}))
-				if (input.value !== '') tr.style.order = input.value
-			})
+	function findPositionAndPlace(tr) {
+		const order = tr.querySelector('input[name$="[order]"]').value
+
+		while (tr.previousElementSibling &&
+		tr.previousElementSibling.querySelector('input[name$="[order]"]').value > order) {
+			tbody.insertBefore(tr, tr.previousElementSibling)
+		}
+
+		while (tr.nextElementSibling &&
+		tr.nextElementSibling.querySelector('input[name$="[order]"]').value < order) {
+			tbody.insertBefore(tr, tr.nextElementSibling.nextElementSibling)
+		}
+	}
+
+	// Fix orders
+	try {
+		let trs = [...document.querySelectorAll('tr')]
+		trs = trs.sort((tr_a, tr_b) => {
+			const a = parseInt(tr_a.querySelector('input[name$="[order]"]').value)
+			const b = parseInt(tr_b.querySelector('input[name$="[order]"]').value)
+			return a === b ? 0 : a < b ? -1 : 1
+		})
+		trs.forEach(tr => tbody.removeChild(tr))
+		trs.forEach(tr => tbody.appendChild(tr))
 	} catch (e) {
 		console.error(e)
 	}
 
+	// Handle positioning buttons
 	try {
-		//TODO make not redundant
-		document.querySelectorAll('.down')
-			.forEach(div => {
-				const td = div.parentElement
-				const orderInput = td.querySelector('input[type=number][name$="[order]"]')
+		const buttonBehavior = {
+			".down": 1,
+			".up": -1,
+		}
+		Object.entries(buttonBehavior).forEach(([selector, dOrder]) => {
+			const matchingElements = document.querySelectorAll(selector)
+			for (let i = 0; i < matchingElements.length; i++) {
+				const button = matchingElements[i]
+				const td = button.parentElement
+				const tr = td.parentElement
+				const orderInput = tr.querySelector('input[name$="[order]"]')
 
-				div.addEventListener('click', () => {
-					orderInput.value++
-					orderInput.dispatchEvent(new Event('change'))
+				button.addEventListener('click', () => {
+					reorderStart()
+					orderInput.value = parseInt(orderInput.value || 0) + dOrder
+					findPositionAndPlace(tr)
+					reorderEnd()
 				})
-			})
-		document.querySelectorAll('.up')
-			.forEach(div => {
-				const td = div.parentElement
-				const orderInput = td.querySelector('input[type=number][name$="[order]"]')
-
-				div.addEventListener('click', () => {
-					orderInput.value--
-					orderInput.dispatchEvent(new Event('change'))
-				})
-			})
+			}
+		})
 	} catch (e) {
 		console.error(e)
 	}
@@ -93,6 +92,27 @@ document.addEventListener('DOMContentLoaded', () => {
 		console.error(e)
 	}
 })
+
+function reorderStart(trs = document.querySelectorAll('tr')) {
+	if (trs instanceof HTMLElement) trs = arguments
+	for (tr of trs) {
+		tr.style.transition = 'none'
+		tr.style.position = 'inherit'
+		tr.lastOffsetTop = tr.offsetTop
+	}
+}
+
+function reorderEnd(trs = document.querySelectorAll('tr')) {
+	if (trs instanceof HTMLElement) trs = arguments
+	trs.forEach(tr => {
+		tr.style.transition = 'none'
+		tr.style.position = 'inherit'
+		tr.nextOffsetTop = tr.offsetTop
+		tr.style.top = tr.lastOffsetTop - tr.nextOffsetTop + 'px'
+		tr.style.position = 'relative'
+		fs(null, () => tr.style.transition = null, () => tr.style.top = '0px')
+	})
+}
 
 function fs(...fa) {
 	let delay = null
