@@ -1,3 +1,5 @@
+const initialRandomizationFactor = 1
+
 document.addEventListener('DOMContentLoaded', () => {
 	const tbody = document.querySelector('tbody')
 
@@ -24,7 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			return a === b ? 0 : a < b ? -1 : 1
 		})
 		trs.forEach(tr => tbody.removeChild(tr))
-		trs.forEach(tr => tbody.appendChild(tr))
+		trs.filter(tr => tr.querySelector('input[name$="[order]"]').value === '')
+			.reverse()
+			.sort(() => Math.random() >= initialRandomizationFactor ? 0
+				: Math.random() <= 0.5 ? -1 : 1)
+			.forEach(tr => tbody.appendChild(tr))
+		trs.filter(tr => tr.querySelector('input[name$="[order]"]').value !== '')
+			.forEach(tr => tbody.appendChild(tr))
 	} catch (e) {
 		console.error(e)
 	}
