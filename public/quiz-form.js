@@ -1,4 +1,4 @@
-const initialRandomizationFactor = 1
+const shuffleFactor = 1
 
 document.addEventListener('DOMContentLoaded', () => {
 	const tbody = document.querySelector('tbody')
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		trs.forEach(tr => tbody.removeChild(tr))
 		trs.filter(tr => tr.querySelector('input[name$="[order]"]').value === '')
 			.reverse()
-			.sort(() => Math.random() >= initialRandomizationFactor ? 0
+			.sort(() => Math.random() >= shuffleFactor ? 0
 				: Math.random() <= 0.5 ? -1 : 1)
 			.forEach(tr => tbody.appendChild(tr))
 		trs.filter(tr => tr.querySelector('input[name$="[order]"]').value !== '')
