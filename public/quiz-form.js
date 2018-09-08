@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const buttonBehavior = {
 			".down": generateCleverPushFunction(1),
 			".up": generateCleverPushFunction(-1),
+			".remove": removeTr,
 		}
 
 		Object.entries(buttonBehavior).forEach(([selector, dOrder]) => {
@@ -235,6 +236,39 @@ document.addEventListener('DOMContentLoaded', () => {
 	} catch (e) {
 		console.error(e)
 	}
+
+	try {
+		document.querySelector('button#add').addEventListener('click', evt => {
+			try {
+				let eid = 0
+				while (document.querySelector('tr[eid="' + eid + '"]')) eid++
+				const order = [...document.querySelectorAll('input[name$="[order]"]')]
+						.map(input => parseInt(input.value || 0))
+						.reduce((a, v) => Math.max(a, v), 0)
+					+ 1
+				tbody.insertAdjacentHTML('beforeend', `
+<tr style="--background-color: ${randomColor({seed: eid})}" eid="${eid}">
+	<td class="question">
+		<input type="text" name="entries[${eid}][question]" placeholder="Question">
+	</td>
+	<td class="answer">
+		<input type="text" name="entries[${eid}][answer]" placeholder="Answer">	
+	</td>
+	<td class="order">
+		<input type="number" name="entries[${eid}][order]" placeholder="Order" value="${order}">
+		<div class="down"></div>
+		<div class="up"></div>
+		<div class="remove" onclick="reorderStart(); removeTr(${eid}); reorderEnd();"></div>
+	</td>
+</tr>`)
+				document.querySelector('input[name="entries[' + eid + '][question]"]').focus()
+			} finally {
+				evt.preventDefault()
+			}
+		})
+	} catch (e) {
+		console.error(e)
+	}
 })
 
 function reorderStart(trs = document.querySelectorAll('tr')) {
@@ -309,6 +343,14 @@ function generateCleverPushFunction(dOrder) {
 			inc(tr)
 		}
 	}
+}
+
+function removeTr(tr_or_eid) {
+	if (!(tr_or_eid instanceof HTMLElement)) {
+		tr_or_eid = document.querySelector(`tr[eid="${CSS.escape(tr_or_eid)}"]`)
+	}
+
+	tr_or_eid.parentElement.removeChild(tr_or_eid)
 }
 
 function fs(...fa) {

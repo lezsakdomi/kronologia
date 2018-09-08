@@ -4,6 +4,7 @@ html
 		title= quiz ? quiz.title : "Quiz not found"
 		link(rel='stylesheet' href='/quiz-form.css')
 		script(src="https://cdn.jsdelivr.net/npm/slipjs@2/slip.js")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js")
 		script.
 			shuffleFactor = #{JSON.stringify(config.get("shuffleFactor"))}
 			autoOrdering = #{JSON.stringify(config.get("autoOrdering"))}
@@ -13,18 +14,35 @@ html
 			p The specified quiz does not exists.
 			p You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
 		else
-			h1= quiz.title
 			form(action=action method='post')
+				if editable
+					input(name='title' value=quiz.title)
+				else
+					h1= quiz.title
 				table
-					for eid in Object.keys(quiz.entries)
-						tr(style="--background-color: " + randomColor({seed: eid}))
-							td.question= quiz.entries[eid].question
-							td.answer: input(type='text' name='entries[' + eid + '][answer]' placeholder="Answer")
-							td.order
-								input(type='number' name='entries[' + eid + '][order]' placeholder="Order")
-								.down
-								.up
+					tbody
+						if quiz.entries
+							for eid in Object.keys(quiz.entries)
+								// Don't forget to update the button#add behavior in quiz-form.js
+								tr(style="--background-color: " + randomColor({seed: eid}) eid=eid)
+									td.question
+										if editable
+											input(type='text' name='entries[' + eid + '][question]' placeholder="Question" value=quiz.entries[eid].question)
+										else
+											= quiz.entries[eid].question
+									td.answer
+										- attributes = editable ? {value: quiz.entries[eid].answer} : {}
+										input(type='text' name='entries[' + eid + '][answer]' placeholder="Answer")&attributes(attributes)
+									td.order
+										- attributes = editable ? {value: quiz.entries[eid].order} : {}
+										input(type='number' name='entries[' + eid + '][order]' placeholder="Order")&attributes(attributes)
+										.down
+										.up
+										if editable
+											.remove
 				.row
+					if editable
+						button#add +
 					input(type='submit' value=action)
 					| &nbsp;
 					input(type='checkbox' id='showBg')

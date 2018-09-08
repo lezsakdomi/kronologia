@@ -39,6 +39,27 @@ router.get('/index.html', async (req, res, next) => {
 	}
 })
 
+//noinspection JSUnresolvedFunction
+router.get('/new.html', (req, res) => {
+	return res.render('quiz-form', {quiz: {}, editable: true, action: "new"})
+})
+
+// noinspection JSUnresolvedFunction
+router.post('/new', async (req, res, next) => {
+	try {
+		const document = req.body
+
+		for (eid in document.entries) {
+			document.entries[eid].order = parseInt(document.entries[eid].order)
+		}
+
+		const response = await req.db.collection('quizzes').insertOne(document)
+		res.json(response)
+	} catch (e) {
+		next(e)
+	}
+})
+
 const quizRouter = express.Router({})
 // noinspection JSUnresolvedFunction
 router.use('/:qid', async (req, res, next) => {
@@ -184,4 +205,27 @@ quizRouter.post('/check', (req, res, next) => {
 })
 
 // noinspection JSUnresolvedFunction
-quizRouter.get('/form.html', async (req, res) => res.render('quiz-form', {action: 'check'}))
+quizRouter.get('/form.html', (req, res) => {
+	return res.render('quiz-form', {action: 'check', editable: false})
+})
+
+// noinspection JSUnresolvedFunction
+quizRouter.post('/update', async (req, res, next) => {
+	try {
+		const document = req.body
+
+		for (eid in document.entries) {
+			document.entries[eid].order = parseInt(document.entries[eid].order)
+		}
+
+		const response = await req.db.collection('quizzes').replaceOne(res.locals.quiz, document)
+		res.json(response)
+	} catch (e) {
+		next(e)
+	}
+})
+
+// noinspection JSUnresolvedFunction
+quizRouter.get('/edit.html', (req, res) => {
+	return res.render('quiz-form', {action: 'update', editable: true})
+})
