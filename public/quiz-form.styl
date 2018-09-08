@@ -17,7 +17,7 @@ tr
 	transition background ease-in 2s, top ease 0.5s
 	position relative
 
-tr:hover, .show-bg tr
+tr:hover, .slip-reordering, .show-bg tr
 	background var(--background-color, yellow)
 	transition background ease-out 1s, top ease 0.5s
 
@@ -68,3 +68,6 @@ background #fee
 .row
 	display flex
 	align-items center
+
+.slip-reordering
+	border 1px solid rgba(128, 128, 128, 0.2)
