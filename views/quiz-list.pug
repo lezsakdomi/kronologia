@@ -5,8 +5,7 @@ html
 		ul
 			for quiz in quizzes
 				li: form
-					a(href=quiz._id)= quiz.title
+					a(href=quiz._id + '/form.html')= quiz.title
 					| &nbsp;
-					button(formaction=quiz._id + '/form.html') form
 					button(formaction=quiz._id + '/edit.html') edit
 		a(href='new.html'): button +
