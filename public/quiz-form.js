@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	try {
 		const submit = document.querySelector('input[type=submit][value=check]')
 		submit.addEventListener('click', (evt) => {
-			const form = submit.parentElement
+			const form = document.querySelector('form')
 			// noinspection JSCheckFunctionSignatures
 			const formData = new FormData(form)
 
