@@ -1,6 +1,7 @@
 %YAML1.2
 ---
 acceptMultipart: true
+auth: false
 autoOrdering: true
 locale: en
 secret: 'keyboard cat' #TODO generate automatically
