@@ -198,6 +198,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	} catch (e) {
 		console.error(e)
 	}
+
+	try {
+		const checkbox = document.querySelector('#showBg')
+		checkbox.addEventListener('change', evt => {
+			if (evt.target.checked) {
+				tbody.classList.add('show-bg')
+			} else {
+				tbody.classList.remove('show-bg')
+			}
+		})
+		if (checkbox.checked) tbody.classList.add('show-bg')
+	} catch (e) {
+		console.error(e)
+	}
 })
 
 function reorderStart(trs = document.querySelectorAll('tr')) {

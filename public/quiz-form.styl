@@ -17,7 +17,7 @@ tr
 	transition background ease-in 2s, top ease 0.5s
 	position relative
 
-tr:hover
+tr:hover, .show-bg tr
 	background var(--background-color, yellow)
 	transition background ease-out 1s, top ease 0.5s
 
@@ -64,3 +64,7 @@ input:invalid:focus
 input:invalid
 background #fee
 */
+
+.row
+	display flex
+	align-items center

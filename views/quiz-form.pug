@@ -21,4 +21,8 @@ html
 								input(type='number' name='entries[' + eid + '][order]' placeholder="Order")
 								.down
 								.up
-				input(type='submit' value='check')
+				.row
+					input(type='submit' value='check')
+					| &nbsp;
+					input(type='checkbox' id='showBg')
+					label(for='showBg') Show colors
