@@ -454,7 +454,6 @@ deploy_to_heroku:
   only:
     refs:
       - master
-      - CD
   stage: production
   type: deploy
   environment:
