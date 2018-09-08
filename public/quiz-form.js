@@ -19,12 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		const order = parseInt(tr.querySelector('input[name$="[order]"]').value || 0)
 
 		while (tr.previousElementSibling &&
-		parseInt(tr.previousElementSibling.querySelector('input[name$="[order]"]').value || 0) > order) {
+		parseInt(tr.previousElementSibling.querySelector('input[name$="[order]"]').value || 0) >
+		order) {
 			tbody.insertBefore(tr, tr.previousElementSibling)
 		}
 
 		while (tr.nextElementSibling &&
-		parseInt(tr.nextElementSibling.querySelector('input[name$="[order]"]').value || 0) < order) {
+		parseInt(tr.nextElementSibling.querySelector('input[name$="[order]"]').value || 0) <
+		order) {
 			tbody.insertBefore(tr, tr.nextElementSibling.nextElementSibling)
 		}
 	}
@@ -337,7 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (dataObject.entries) {
 					dataObject.entries = Object.values(dataObject.entries)
 						.sort((a, b) => a.order.localeCompare(b.order, locale, {numeric: true}))
-				} else console.warn("dataObject.entries is empty!", dataObject)
+				} else {
+					console.warn("dataObject.entries is empty!", dataObject)
+				}
 
 				fetch("update", {
 					method: "POST",
