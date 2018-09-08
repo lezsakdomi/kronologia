@@ -10,15 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	const tbody = document.querySelector('tbody')
 
 	function findPositionAndPlace(tr) {
-		const order = tr.querySelector('input[name$="[order]"]').value
+		const order = parseInt(tr.querySelector('input[name$="[order]"]').value || 0)
 
 		while (tr.previousElementSibling &&
-		tr.previousElementSibling.querySelector('input[name$="[order]"]').value > order) {
+		parseInt(tr.previousElementSibling.querySelector('input[name$="[order]"]').value || 0) > order) {
 			tbody.insertBefore(tr, tr.previousElementSibling)
 		}
 
 		while (tr.nextElementSibling &&
-		tr.nextElementSibling.querySelector('input[name$="[order]"]').value < order) {
+		parseInt(tr.nextElementSibling.querySelector('input[name$="[order]"]').value || 0) < order) {
 			tbody.insertBefore(tr, tr.nextElementSibling.nextElementSibling)
 		}
 	}

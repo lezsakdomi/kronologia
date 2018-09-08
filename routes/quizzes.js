@@ -49,9 +49,7 @@ router.post('/new', async (req, res, next) => {
 	try {
 		const document = req.body
 
-		for (eid in document.entries) {
-			document.entries[eid].order = parseInt(document.entries[eid].order)
-		}
+		normalizeInput(document)
 
 		const response = await req.db.collection('quizzes').insertOne(document)
 		res.json(response)
@@ -61,6 +59,7 @@ router.post('/new', async (req, res, next) => {
 })
 
 const quizRouter = express.Router({})
+
 // noinspection JSUnresolvedFunction
 router.use('/:qid', async (req, res, next) => {
 	// noinspection JSUnresolvedVariable
@@ -83,12 +82,13 @@ router.use('/:qid', async (req, res, next) => {
 }, quizRouter)
 // noinspection JSUnresolvedFunction
 quizRouter.get('/', (req, res) => res.json(res.locals.quiz))
-
 // noinspection JSUnresolvedFunction
 quizRouter.post('/check', (req, res, next) => {
 	try {
 		const fails = []
 		const successes = []
+
+		normalizeInput(req.body)
 
 		{
 			debug("Checking for orders...")
@@ -214,9 +214,7 @@ quizRouter.post('/update', async (req, res, next) => {
 	try {
 		const document = req.body
 
-		for (eid in document.entries) {
-			document.entries[eid].order = parseInt(document.entries[eid].order)
-		}
+		normalizeInput(document)
 
 		const response = await req.db.collection('quizzes').replaceOne(res.locals.quiz, document)
 		res.json(response)
@@ -229,3 +227,9 @@ quizRouter.post('/update', async (req, res, next) => {
 quizRouter.get('/edit.html', (req, res) => {
 	return res.render('quiz-form', {action: 'update', editable: true})
 })
+
+function normalizeInput(quiz) {
+	for (eid in quiz.entries) {
+		quiz.entries[eid].order = parseInt(quiz.entries[eid].order)
+	}
+}
