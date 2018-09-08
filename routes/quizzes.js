@@ -184,5 +184,4 @@ quizRouter.post('/check', (req, res, next) => {
 })
 
 // noinspection JSUnresolvedFunction
-quizRouter.get('/form.html',
-	async (req, res) => res.render('quiz-form'))
+quizRouter.get('/form.html', async (req, res) => res.render('quiz-form', {action: 'check'}))

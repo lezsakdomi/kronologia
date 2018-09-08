@@ -14,7 +14,7 @@ html
 			p You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
 		else
 			h1= quiz.title
-			form(action='check' method='post')
+			form(action=action method='post')
 				table
 					for eid in Object.keys(quiz.entries)
 						tr(style="--background-color: " + randomColor({seed: eid}))
@@ -25,7 +25,7 @@ html
 								.down
 								.up
 				.row
-					input(type='submit' value='check')
+					input(type='submit' value=action)
 					| &nbsp;
 					input(type='checkbox' id='showBg')
 					label(for='showBg') Show colors
