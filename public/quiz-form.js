@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const unorderedTrs = trs.filter(
 			tr => tr.querySelector('input[name$="[order]"]').value === '')
-			.reverse()
 			.sort(() => Math.random() >= shuffleFactor ? 0
 				: Math.random() <= 0.5 ? -1 : 1)
 
