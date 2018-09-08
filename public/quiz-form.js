@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		console.error(e)
 	}
 
+	// SlipJS integration
 	try {
 		new Slip(tbody)
 
@@ -125,6 +126,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			if (insertBefore) {
 				orderInput.value = insertBefore.querySelector('input[name$="[order]"]').value
+
+				if (tr.previousElementSibling === null ) {
+					const shift = orderInput.value - 2
+					document.querySelectorAll('input[name$="[order]"]').forEach(orderInput => {
+						orderInput.value -= shift
+					})
+					orderInput.value = 1
+				} else if (tr.previousElementSibling.querySelector(
+					'input[name$="[order]"]').value < orderInput.value - 1) {
+					// enough space before
+					orderInput.value--
+				} else {
+					// get empty place for this
+					for (let tr = insertBefore; tr !== null; tr = tr.nextElementSibling) {
+						if (tr.querySelector('input[name$="[order]"]').value !==
+							tr.previousElementSibling.querySelector(
+								'input[name$="[order]"]').value) {
+							break
+						}
+						tr.querySelector('input[name$="[order]"]').value++
+					}
+				}
+				// prepare for bugs
+				findPositionAndPlace(tr)
 			} else {
 				orderInput.value = [...document.querySelectorAll('input[name$="[order]"]')]
 						.map(input => input.value)
