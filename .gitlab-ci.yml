@@ -449,6 +449,25 @@ rollout 100%:
     kubernetes: active
     variables:
       - $INCREMENTAL_ROLLOUT_ENABLED
+      
+deploy_to_heroku:
+  only:
+    refs:
+      - master
+      - CD
+  stage: production
+  type: deploy
+  environment:
+    name: heroku
+    url: https://$HEROKU_APP_NAME.herokuapp.com
+  image: ruby:latest
+  variables:
+    HEROKU_APP_NAME: kronologia
+  script:
+    - apt-get update -yq >/dev/null
+    - apt-get install -yqq ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
 
 # ---------------------------------------------------------------------------
 
