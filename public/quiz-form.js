@@ -45,9 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Handle positioning buttons
 	try {
 		const buttonBehavior = {
-			".down": 1,
-			".up": -1,
+			".down": generateCleverPushFunction(1),
+			".up": generateCleverPushFunction(-1),
 		}
+
 		Object.entries(buttonBehavior).forEach(([selector, dOrder]) => {
 			const matchingElements = document.querySelectorAll(selector)
 			for (let i = 0; i < matchingElements.length; i++) {
@@ -58,7 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				button.addEventListener('click', () => {
 					reorderStart()
-					orderInput.value = parseInt(orderInput.value || 0) + dOrder
+					if (dOrder instanceof Function) {
+						dOrder(tr)
+					} else {
+						orderInput.value = parseInt(orderInput.value || 0) + dOrder
+					}
 					findPositionAndPlace(tr)
 					reorderEnd()
 				})
@@ -151,6 +156,59 @@ function reorderEnd(trs = document.querySelectorAll('tr')) {
 		tr.style.position = 'relative'
 		fs(null, () => tr.style.transition = null, () => tr.style.top = '0px')
 	})
+}
+
+// Returns a lambda (tr -> undefined), which pushes the given tr up or down, according to dOrder
+// Don't touch or rewrite; it works
+function generateCleverPushFunction(dOrder) {
+	let next, prev, inc, dec, less, more, eq
+	switch (dOrder) {
+		case 1:
+			next = (tr) => tr.nextElementSibling
+			prev = (tr) => tr.previousElementSibling
+			inc = (tr) => tr.querySelector('input[name$="[order]"]').value++
+			dec = (tr) => tr.querySelector('input[name$="[order]"]').value--
+			less = (a, b) => parseInt(a.querySelector('input[name$="[order]"]').value || 0) <
+				parseInt(b.querySelector('input[name$="[order]"]').value || 0)
+			more = (a, b) => parseInt(a.querySelector('input[name$="[order]"]').value || 0) >
+				parseInt(b.querySelector('input[name$="[order]"]').value || 0) + 1
+			eq = (a, b) => a.querySelector('input[name$="[order]"]').value ===
+				b.querySelector('input[name$="[order]"]').value
+			break
+
+		case -1:
+			next = (tr) => tr.previousElementSibling
+			prev = (tr) => tr.nextElementSibling
+			inc = (tr) => tr.querySelector('input[name$="[order]"]').value--
+			dec = (tr) => tr.querySelector('input[name$="[order]"]').value++
+			less = (a, b) => parseInt(a.querySelector('input[name$="[order]"]').value || 0) >
+				parseInt(b.querySelector('input[name$="[order]"]').value || 0)
+			more = (a, b) => parseInt(a.querySelector('input[name$="[order]"]').value || 0) <
+				parseInt(b.querySelector('input[name$="[order]"]').value || 0) - 1
+			eq = (a, b) => a.querySelector('input[name$="[order]"]').value ===
+				b.querySelector('input[name$="[order]"]').value
+			break
+
+		default:
+			throw new RangeError("Only +1 or -1 is supported as dOrder")
+	}
+
+	return (tr) => {
+		if (prev(tr) && more(tr, prev(tr)) && next(tr) && eq(tr, next(tr))) {
+			for (let target = next(tr); target !== null; target = next(target)) {
+				if (!eq(tr, target)) break
+				dec(target)
+			}
+		} else if (prev(tr) && eq(tr, prev(tr))) {
+			inc(tr)
+			for (let target = next(tr); target !== null; target = next(target)) {
+				if (!eq(target, prev(target))) break
+				inc(target)
+			}
+		} else {
+			inc(tr)
+		}
+	}
 }
 
 function fs(...fa) {
