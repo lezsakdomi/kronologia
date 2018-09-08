@@ -119,42 +119,80 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (target.tagName === "TD") evt.preventDefault()
 		})
 
+		tbody.addEventListener('slip:beforereorder', evt => {
+			let tr = evt.target
+			while (tr.tagName !== 'TR') tr = tr.parentElement
+
+			tr.lastSlipBeforeReorder = evt
+		})
+
 		tbody.addEventListener('slip:reorder', evt => {
 			const {target: tr, detail: {insertBefore}} = evt
-			tbody.insertBefore(tr, insertBefore)
 			const orderInput = tr.querySelector('input[name$="[order]"]')
+			const startTime = new Date(tr.lastSlipBeforeReorder.timeStamp)
+			const endTime = new Date(evt.timeStamp)
 
-			if (insertBefore) {
-				orderInput.value = insertBefore.querySelector('input[name$="[order]"]').value
+			tr.style.transform = null
 
-				if (tr.previousElementSibling === null ) {
-					const shift = orderInput.value - 2
-					document.querySelectorAll('input[name$="[order]"]').forEach(orderInput => {
-						orderInput.value -= shift
-					})
-					orderInput.value = 1
-				} else if (tr.previousElementSibling.querySelector(
-					'input[name$="[order]"]').value < orderInput.value - 1) {
-					// enough space before
-					orderInput.value--
-				} else {
-					// get empty place for this
-					for (let tr = insertBefore; tr !== null; tr = tr.nextElementSibling) {
-						if (tr.querySelector('input[name$="[order]"]').value !==
-							tr.previousElementSibling.querySelector(
-								'input[name$="[order]"]').value) {
-							break
-						}
-						tr.querySelector('input[name$="[order]"]').value++
+			if (tr.nextElementSibling === insertBefore) {
+				if (endTime - startTime < 200) { // Just touched
+					if (orderInput.value === '') {
+						orderInput.value = parseInt(document.querySelector(
+							'tr:last-child input[name$="[order]"]'
+						).value || 0) + 1
+						reorderStart()
+						tbody.insertBefore(tr, null)
+						reorderEnd()
+					} else {
+						// it was an accident
 					}
 				}
-				// prepare for bugs
-				findPositionAndPlace(tr)
 			} else {
-				orderInput.value = [...document.querySelectorAll('input[name$="[order]"]')]
-						.map(input => input.value)
-						.reduce((a, v) => Math.max(a, v), 0)
-					+ 1
+				tbody.insertBefore(tr, insertBefore)
+
+				if (insertBefore === null) {
+					// inserted to end of list
+					orderInput.value = [...document.querySelectorAll('input[name$="[order]"]')]
+							.map(input => parseInt(input.value || 0))
+							.reduce((a, v) => Math.max(a, v), 0)
+						+ 1
+				} else if (tr.previousElementSibling === null || tr.previousElementSibling
+					.querySelector('input[name$="[order]"]').value === '') {
+					if (tr.nextElementSibling && tr.nextElementSibling
+						.querySelector('input[name$="[order]"]').value === '') {
+						// noop; let the users to freely organise their stuff
+					} else {
+						const shift = insertBefore.querySelector('input[name$="[order]"]').value - 2
+
+						document.querySelectorAll('input[name$="[order]"]:placeholder-shown')
+							.forEach(orderInput => orderInput.value -= shift)
+
+						orderInput.value = 1
+					}
+				} else if (insertBefore) {
+					orderInput.value = insertBefore.querySelector('input[name$="[order]"]').value
+
+					if (tr.previousElementSibling.querySelector(
+						'input[name$="[order]"]').value < orderInput.value - 1) {
+						// enough space before
+						orderInput.value--
+					} else {
+						// get empty place for this
+						for (let tr = insertBefore; tr !== null; tr = tr.nextElementSibling) {
+							if (tr.querySelector('input[name$="[order]"]').value !==
+								tr.previousElementSibling.querySelector(
+									'input[name$="[order]"]').value) {
+								break
+							}
+							tr.querySelector('input[name$="[order]"]').value++
+						}
+					}
+					// prepare for bugs
+					reorderStart()
+					findPositionAndPlace(tr)
+					reorderEnd()
+					if (tr.lastOffsetTop !== tr.nextOffsetTop) console.warn("Reorder was needed")
+				}
 			}
 		})
 	} catch (e) {
