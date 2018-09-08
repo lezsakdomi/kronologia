@@ -104,6 +104,32 @@ document.addEventListener('DOMContentLoaded', () => {
 	} catch (e) {
 		console.error(e)
 	}
+
+	try {
+		new Slip(tbody)
+
+		tbody.addEventListener('slip:beforewait', evt => {
+			const {target} = evt
+			if (target.tagName === "TD") evt.preventDefault()
+		})
+
+		tbody.addEventListener('slip:reorder', evt => {
+			const {target: tr, detail: {insertBefore}} = evt
+			tbody.insertBefore(tr, insertBefore)
+			const orderInput = tr.querySelector('input[name$="[order]"]')
+
+			if (insertBefore) {
+				orderInput.value = insertBefore.querySelector('input[name$="[order]"]').value
+			} else {
+				orderInput.value = [...document.querySelectorAll('input[name$="[order]"]')]
+						.map(input => input.value)
+						.reduce((a, v) => Math.max(a, v), 0)
+					+ 1
+			}
+		})
+	} catch (e) {
+		console.error(e)
+	}
 })
 
 function reorderStart(trs = document.querySelectorAll('tr')) {
