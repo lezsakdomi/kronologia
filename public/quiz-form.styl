@@ -26,6 +26,11 @@ td:first-of-type
 
 input[name$='[order]']
 	width 4em
+	& ~ div
+		transition border-color 1s
+	&:placeholder-shown ~ div
+		border-color transparent
+		visibility hidden
 
 input[name$='[answer]']
 	width 15em
