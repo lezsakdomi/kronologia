@@ -1,4 +1,6 @@
-const shuffleFactor = 1
+if (window.shuffleFactor === undefined) {
+	shuffleFactor = 1
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 	const tbody = document.querySelector('tbody')

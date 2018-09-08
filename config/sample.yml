@@ -39,4 +39,7 @@ auth:
     consumerKey: TWITTER_CONSUMER_KEY
     consumerSecret: TWITTER_CONSUMER_SECRET
     callbackURL: http://localhost:3000/auth/twitter
+
+# There is a 30% chance, that initial order will change
+shuffleFactor: 0.3
 ...

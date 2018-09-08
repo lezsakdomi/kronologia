@@ -6,4 +6,5 @@ secure: false #TODO
 session:
   resave: false
   saveUninitialized: false
+shuffleFactor: 1
 ...

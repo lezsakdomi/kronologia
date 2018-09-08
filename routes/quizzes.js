@@ -2,6 +2,7 @@ const express = require('express')
 const MongoClient = require('mongodb')
 const randomColor = require('randomcolor')
 const mongo = require('../mongo')
+const config = require('config')
 const debug = require('debug')('kronologia:backend:quizRouter')
 
 const router = express.Router({})
@@ -185,4 +186,4 @@ quizRouter.post('/check', (req, res, next) => {
 
 // noinspection JSUnresolvedFunction
 quizRouter.get('/form.html',
-	async (req, res) => res.render('quiz-form', {quiz: req.quiz, randomColor}))
+	async (req, res) => res.render('quiz-form', {quiz: req.quiz, randomColor, config}))
