@@ -1,5 +1,9 @@
-if (window.shuffleFactor === undefined) {
+if (shuffleFactor === undefined) {
 	shuffleFactor = 1
+}
+
+if (autoOrdering === undefined) {
+	autoOrdering = true
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,20 +25,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Fix orders
 	try {
-		let trs = [...document.querySelectorAll('tr')]
-		trs = trs.sort((tr_a, tr_b) => {
-			const a = parseInt(tr_a.querySelector('input[name$="[order]"]').value)
-			const b = parseInt(tr_b.querySelector('input[name$="[order]"]').value)
-			return a === b ? 0 : a < b ? -1 : 1
-		})
+		const trs = [...document.querySelectorAll('tr')]
 		trs.forEach(tr => tbody.removeChild(tr))
-		trs.filter(tr => tr.querySelector('input[name$="[order]"]').value === '')
+
+		const unorderedTrs = trs.filter(
+			tr => tr.querySelector('input[name$="[order]"]').value === '')
 			.reverse()
 			.sort(() => Math.random() >= shuffleFactor ? 0
 				: Math.random() <= 0.5 ? -1 : 1)
-			.forEach(tr => tbody.appendChild(tr))
-		trs.filter(tr => tr.querySelector('input[name$="[order]"]').value !== '')
-			.forEach(tr => tbody.appendChild(tr))
+
+		const orderedTrs = trs.filter(tr => tr.querySelector('input[name$="[order]"]').value !== '')
+			.sort((tr_a, tr_b) => {
+				const a = parseInt(tr_a.querySelector('input[name$="[order]"]').value)
+				const b = parseInt(tr_b.querySelector('input[name$="[order]"]').value)
+				return a === b ? 0 : a < b ? -1 : 1
+			})
+
+		if (autoOrdering && orderedTrs.length === 0) {
+			unorderedTrs.forEach((e, i) => {
+				e.querySelector('input[name$="[order]"]').value = i + 1
+			})
+		}
+
+		unorderedTrs.forEach(tr => tbody.appendChild(tr))
+		orderedTrs.forEach(tr => tbody.appendChild(tr))
 	} catch (e) {
 		console.error(e)
 	}

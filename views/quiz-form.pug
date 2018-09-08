@@ -5,7 +5,8 @@ html
 		link(rel='stylesheet' href='/quiz-form.css')
 		script(src="https://cdn.jsdelivr.net/npm/slipjs@2/slip.js")
 		script.
-			shuffleFactor = #{config.get("shuffleFactor")}
+			shuffleFactor = #{JSON.stringify(config.get("shuffleFactor"))}
+			autoOrdering = #{JSON.stringify(config.get("autoOrdering"))}
 		script(src='/quiz-form.js')
 	body
 		unless quiz
