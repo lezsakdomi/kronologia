@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		tbody.addEventListener('slip:beforewait', evt => {
 			const {target} = evt
-			if (target.tagName === "TD") evt.preventDefault()
+			if (target.classList.contains('question')) evt.preventDefault()
 		})
 
 		tbody.addEventListener('slip:beforereorder', evt => {

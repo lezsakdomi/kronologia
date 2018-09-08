@@ -15,9 +15,9 @@ html
 				table
 					for eid in Object.keys(quiz.entries)
 						tr(style="--background-color: " + randomColor({seed: eid}))
-							td= quiz.entries[eid].question
-							td: input(type='text' name='entries[' + eid + '][answer]' placeholder="Answer")
-							td
+							td.question= quiz.entries[eid].question
+							td.answer: input(type='text' name='entries[' + eid + '][answer]' placeholder="Answer")
+							td.order
 								input(type='number' name='entries[' + eid + '][order]' placeholder="Order")
 								.down
 								.up
