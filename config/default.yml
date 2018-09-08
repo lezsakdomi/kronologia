@@ -2,6 +2,7 @@
 ---
 acceptMultipart: true
 autoOrdering: true
+locale: en
 secret: 'keyboard cat' #TODO generate automatically
 secure: false #TODO
 session:

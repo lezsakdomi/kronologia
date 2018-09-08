@@ -6,6 +6,12 @@ if (autoOrdering === undefined) {
 	autoOrdering = true
 }
 
+if (locale === undefined) {
+	locale = "en"
+}
+
+window.addEventListener('beforeunload', () => "Nothing will be saved. Are you sure?")
+
 document.addEventListener('DOMContentLoaded', () => {
 	const tbody = document.querySelector('tbody')
 
@@ -262,6 +268,89 @@ document.addEventListener('DOMContentLoaded', () => {
 	</td>
 </tr>`)
 				document.querySelector('input[name="entries[' + eid + '][question]"]').focus()
+			} finally {
+				evt.preventDefault()
+			}
+		})
+	} catch (e) {
+		console.error(e)
+	}
+
+	try {
+		document.querySelector('#sort').addEventListener('click', evt => {
+			try {
+				reorderStart()
+				const trs = [...document.querySelectorAll('tr')]
+					.filter(tr => tr.querySelector('input[name$="[answer]"]').value !== '')
+					.sort((tr_a, tr_b) => {
+						// Just checking in alphabetical order
+						const a = tr_a.querySelector('input[name$="[answer]"]').value
+						const b = tr_b.querySelector('input[name$="[answer]"]').value
+						return a.localeCompare(b, locale, {ignorePunctuation: true}, 'sort')
+					})
+				trs.forEach((tr, i) => tr.querySelector('input[name$="[order]"]').value = i + 1)
+				trs.forEach(tr => tbody.removeChild(tr))
+				trs.forEach(tr => tbody.appendChild(tr))
+				reorderEnd()
+			} finally {
+				evt.preventDefault()
+			}
+		})
+	} catch (e) {
+		console.error(e)
+	}
+
+	try {
+		document.querySelector('#renumber').addEventListener('click', evt => {
+			try {
+				const form = document.querySelector('form')
+				// noinspection JSCheckFunctionSignatures
+				const formData = new FormData(form)
+
+				const dataObject = [...formData].reduce((a, v) => {
+					const [key, value] = v
+					let matches
+
+					if (matches = key.match(/^[^[\]]+$/)) {
+						const [key] = matches
+						a[key] = value
+					} else if (matches = key.match(/^([^[\]]+)(\[[^[\]]+]*)\[([^[\]]+)]$/)) {
+						const [fullMatch, firstKey, immediateKeys, lastKey] = matches
+						if (!a.hasOwnProperty(firstKey)) a[firstKey] = {}
+						let o = a[firstKey]
+						for (let remainImmediateKeys = immediateKeys;
+							 matches = remainImmediateKeys.match(/^\[([^[\]]+)]/);
+							 remainImmediateKeys = remainImmediateKeys.slice(matches[0].length)) {
+							const currentImmediateKey = matches[1]
+
+							if (!o.hasOwnProperty(currentImmediateKey)) o[currentImmediateKey] = {}
+							o = o[currentImmediateKey]
+						}
+						o[lastKey] = value
+					} else {
+						throw new Error("Can't parse key")
+					}
+
+					return a
+				}, {})
+
+				if (dataObject.entries) {
+					dataObject.entries = Object.values(dataObject.entries)
+						.sort((a, b) => a.order.localeCompare(b.order, locale, {numeric: true}))
+				} else console.warn("dataObject.entries is empty!", dataObject)
+
+				fetch("update", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json; charset=utf-8"
+					},
+					body: JSON.stringify(dataObject),
+				})
+					.then(() => location.reload())
+					.catch(e => {
+						console.error(e)
+						alert("Failed to save data")
+					})
 			} finally {
 				evt.preventDefault()
 			}

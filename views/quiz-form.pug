@@ -6,8 +6,9 @@ html
 		script(src="https://cdn.jsdelivr.net/npm/slipjs@2/slip.js")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js")
 		script.
-			shuffleFactor = #{JSON.stringify(config.get("shuffleFactor"))}
-			autoOrdering = #{JSON.stringify(config.get("autoOrdering"))}
+			shuffleFactor = !{JSON.stringify(config.get("shuffleFactor"))}
+			autoOrdering = !{JSON.stringify(config.get("autoOrdering"))}
+			locale = !{JSON.stringify(config.get("locale"))}
 		script(src='/quiz-form.js')
 	body
 		unless quiz
@@ -43,7 +44,13 @@ html
 				.row
 					if editable
 						button#add +
+						| &nbsp;
 					input(type='submit' value=action)
 					| &nbsp;
 					input(type='checkbox' id='showBg')
 					label(for='showBg') Show colors
+					| &nbsp;
+					button#sort sort
+					if editable
+						| &nbsp;
+						button#renumber renumber
