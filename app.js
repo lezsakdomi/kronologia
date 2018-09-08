@@ -11,6 +11,8 @@ const debug = require('debug')('kronologia:backend:app')
 const app = express()
 module.exports = app
 
+app.locals.config = config
+app.locals.randomColor = require('randomcolor')
 app.set('view engine', 'pug')
 app.use(logger('dev'))
 // noinspection JSUnresolvedFunction

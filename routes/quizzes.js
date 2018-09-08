@@ -1,8 +1,6 @@
 const express = require('express')
 const MongoClient = require('mongodb')
-const randomColor = require('randomcolor')
 const mongo = require('../mongo')
-const config = require('config')
 const debug = require('debug')('kronologia:backend:quizRouter')
 
 const router = express.Router({})
@@ -33,8 +31,9 @@ router.get('/', async (req, res, next) => {
 // noinspection JSUnresolvedFunction
 router.get('/index.html', async (req, res, next) => {
 	try {
-		const quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1}).toArray()
-		res.render('quiz-list', {quizzes})
+		res.locals.quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1})
+			.toArray()
+		res.render('quiz-list')
 	} catch (e) {
 		next(e)
 	}
@@ -55,14 +54,14 @@ router.use('/:qid', async (req, res, next) => {
 			],
 		})
 		debug("Fetched: %o", quiz)
-		req.quiz = quiz
+		res.locals.quiz = quiz
 		next()
 	} catch (e) {
 		next(e)
 	}
 }, quizRouter)
 // noinspection JSUnresolvedFunction
-quizRouter.get('/', (req, res) => res.json(req.quiz))
+quizRouter.get('/', (req, res) => res.json(res.locals.quiz))
 
 // noinspection JSUnresolvedFunction
 quizRouter.post('/check', (req, res, next) => {
@@ -81,11 +80,11 @@ quizRouter.post('/check', (req, res, next) => {
 			let maxBlockOrder = 0
 			for (let i = 0; i < orderedInputIndexesByOrder.length; i++) {
 				const eid = orderedInputIndexesByOrder[i]
-				if (!req.quiz.entries[eid].order) continue
+				if (!res.locals.quiz.entries[eid].order) continue
 
 				debug("  Checking for eid %d", eid)
 
-				const currentOrder = req.quiz.entries[eid].order
+				const currentOrder = res.locals.quiz.entries[eid].order
 				debug("    Reference order: %d", currentOrder)
 				if (i > 0) {
 					const prevEid = orderedInputIndexesByOrder[i - 1]
@@ -143,7 +142,7 @@ quizRouter.post('/check', (req, res, next) => {
 				if (req.body.entries[eid][property] === '') continue
 				debug("  Checking for #%d", eid)
 				// noinspection EqualityComparisonWithCoercionJS
-				if (req.quiz.entries[eid][property] != req.body.entries[eid][property]) {
+				if (res.locals.quiz.entries[eid][property] != req.body.entries[eid][property]) {
 					fails.push({
 						eid,
 						property,
@@ -166,7 +165,7 @@ quizRouter.post('/check', (req, res, next) => {
 				for (let property in req.body.entries[eid]) {
 					if (req.body.entries[eid][property] === '') continue
 					debug("Checking for property '%s' of entry #%d", property, eid)
-					if (req.quiz.entries[eid][property] != req.body.entries[eid][property]) {
+					if (res.locals.quiz.entries[eid][property] != req.body.entries[eid][property]) {
 						fails.push({
 							eid,
 							property,
@@ -186,4 +185,4 @@ quizRouter.post('/check', (req, res, next) => {
 
 // noinspection JSUnresolvedFunction
 quizRouter.get('/form.html',
-	async (req, res) => res.render('quiz-form', {quiz: req.quiz, randomColor, config}))
+	async (req, res) => res.render('quiz-form'))
