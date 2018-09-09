@@ -1,18 +1,29 @@
 {
   "name": "kronologia",
   "description": "Quizzes for dates",
-  "scripts": {
-  },
+  "repository": "https://github.com/lezsakdomi/kronologia",
+  "website": "https://kronologia.ml",
+  "keywords": [
+    "quiz",
+    "chronology",
+    "study"
+  ],
   "env": {
     "DEBUG": "kronologia:*",
     "MONGODB_URI": {
+      "description": "Database URI to connect to",
       "required": true
     },
     "NODE_CONFIG": {
-      "required": true
+      "description": "Additional configuration formatted as JSON"
     },
     "APP_SECRET": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
       "generator": "secret"
+    },
+    "LANG": {
+      "description": "Collation for sorting. Possible values at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#Locale_identification_and_negotiation",
+      "value": "en"
     }
   },
   "formation": {
@@ -27,5 +38,7 @@
     {
       "url": "heroku/nodejs"
     }
-  ]
+  ],
+  "scripts": {
+  }
 }
