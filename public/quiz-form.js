@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				} else {
 					const shift = insertBefore.querySelector('input[name$="[order]"]').value - 2
 
-					document.querySelectorAll('input[name$="[order]"]:placeholder-shown')
+					document.querySelectorAll('input[name$="[order]"]:not(:placeholder-shown)')
 						.forEach(orderInput => orderInput.value -= shift)
 
 					orderInput.value = 1
