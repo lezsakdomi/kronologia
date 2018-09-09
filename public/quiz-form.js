@@ -123,6 +123,11 @@ function registerHandlers(document) {
 
 	customClick('form[action="update"] input[type=submit]', () => updateData(), false)
 
+	handleEvent('*', 'change', () => {
+		if (!window.reorderInProgress) fs(checkForm())
+	})
+	fs(() => checkForm())
+
 	function customClick(selector, handler, required = true) {
 		handleEvent(selector, 'click', function (evt) {
 			try {
@@ -256,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function reorderStart(trs = document.querySelectorAll('tr')) {
+	window.reorderInPorgress = true
 	if (trs instanceof HTMLElement) trs = arguments
 	for (tr of trs) {
 		tr.style.transition = 'none'
@@ -264,6 +270,8 @@ function reorderStart(trs = document.querySelectorAll('tr')) {
 }
 
 function reorderEnd(trs = document.querySelectorAll('tr')) {
+	window.reorderInPorgress = false
+	fs(checkForm())
 	if (trs instanceof HTMLElement) trs = arguments
 	trs.forEach(tr => {
 		tr.style.transition = 'none'
@@ -351,7 +359,7 @@ function checkForm(force = false) {
 	// noinspection JSCheckFunctionSignatures
 	const formData = new FormData(form)
 
-	fetch(form.action, {
+	fetch('check', {
 		method: form.method,
 		body: formData,
 		cache: 'reload',
