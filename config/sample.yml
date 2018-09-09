@@ -1,6 +1,18 @@
 %YAML 1.2
 # Rename (or copy) this file to local.yml and edit as appropriate.
 ---
+mongo:
+  url: mongodb://localhost:27017/kronologia
+#  db: kronologia # specify if not set in URI
+  options:
+    # For possible options please see the documentation of the options parameter at
+    # http://mongodb.github.io/node-mongodb-native/3.1/api/MongoClient.html#MongoClient
+    ssl: true
+#    auth:
+#      user: admin
+#      password: false
+    useNewUrlParser: true
+
 auth:
   google:
     module: passport-google-oauth # The regular google authentication turned down long ago :(

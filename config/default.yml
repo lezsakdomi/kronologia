@@ -4,6 +4,9 @@ acceptMultipart: true
 auth: false
 autoOrdering: true
 locale: en
+mongo:
+  url: mongodb://localhost:27017
+  options: false
 secret: 'keyboard cat' #TODO generate automatically
 secure: false #TODO
 session:

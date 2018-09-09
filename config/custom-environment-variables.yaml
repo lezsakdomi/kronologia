@@ -1,0 +1,8 @@
+%YAML1.2
+---
+locale: LANG
+mongo:
+  url: MONGODB_URI
+  db: MONGODB_DB
+secret: APP_SECRET
+...
