@@ -234,8 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				} else {
 					// get empty place for this
 					insertBefore.querySelector('input[name$="[order]"]').value++
-					for (let tr = insertBefore.nextElementSibling; tr !== null; tr = tr.nextElementSibling) {
-						if (tr.querySelector('input[name$="[order]"]').value >
+					for (let tr = insertBefore.nextElementSibling; tr !== null;
+						 tr = tr.nextElementSibling) {
+						if (tr.nextElementSibling &&
+							tr.querySelector('input[name$="[order]"]').value >
 							tr.previousElementSibling.querySelector(
 								'input[name$="[order]"]').value) {
 							break
