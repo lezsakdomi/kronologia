@@ -1,0 +1,31 @@
+{
+  "name": "kronologia",
+  "description": "Quizzes for dates",
+  "scripts": {
+  },
+  "env": {
+    "DEBUG": "kronologia:*",
+    "MONGODB_URI": {
+      "required": true
+    },
+    "NODE_CONFIG": {
+      "required": true
+    },
+    "APP_SECRET": {
+      "generator": "secret"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "mongolab"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
