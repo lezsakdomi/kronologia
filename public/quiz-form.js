@@ -123,8 +123,6 @@ function registerHandlers(document) {
 
 	customClick('form[action="update"] input[type=submit]', () => updateData(), false)
 
-	customClick('form[action="new"] input[type=submit]', () => newQuiz(undefined, true))
-
 	function customClick(selector, handler, required = true) {
 		handleEvent(selector, 'click', function (evt) {
 			try {
@@ -315,7 +313,18 @@ function gatherData() {
 }
 
 function updateData(data = gatherData(), reload = false) {
-	const promise = postJSON("update", data)
+	const promise = fetch("update", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json; charset=utf-8"
+		},
+		body: JSON.stringify(data),
+	})
+		.then(response => response.json())
+		.then(response => {
+			assert(response.ok)
+			return response
+		})
 
 	promise.then(() => {
 		window.remoteData = data
@@ -333,29 +342,6 @@ function updateData(data = gatherData(), reload = false) {
 				}
 			}
 			return location.reload()
-		})
-	}
-}
-
-function newQuiz(data = gatherData(), redirect = false) {
-	const promise = postJSON("new", data)
-
-	promise.then(() => {
-		window.remoteData = data
-	}, e => {
-		console.error(e)
-		if (reload) alert("Failed to save data")
-	})
-
-	if (redirect) {
-		promise.then(() => {
-			if (window.onbeforeunload) {
-				const originalOnbeforeunload = window.onbeforeunload
-				window.onbeforeunload = function () {
-					originalOnbeforeunload.apply(this, arguments)
-				}
-			}
-			return window.location = 'index.html'
 		})
 	}
 }
@@ -494,21 +480,6 @@ function removeTr(tr_or_eid) {
 	}
 
 	tr_or_eid.parentElement.removeChild(tr_or_eid)
-}
-
-function postJSON(url, data) {
-	return fetch(url, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json; charset=utf-8"
-		},
-		body: JSON.stringify(data),
-	})
-		.then(response => response.json())
-		.then(response => {
-			assert(response.ok)
-			return response
-		})
 }
 
 function fs(...fa) {
