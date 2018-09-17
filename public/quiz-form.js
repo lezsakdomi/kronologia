@@ -464,8 +464,8 @@ function checkForm(force = false) {
 	// noinspection JSCheckFunctionSignatures
 	const formData = new FormData(form)
 
-	fetch(form.action, {
-		method: form.method,
+	fetch('check', {
+		method: 'post',
 		body: formData,
 		cache: 'reload',
 		redirect: 'follow',
