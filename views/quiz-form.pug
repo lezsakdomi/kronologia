@@ -15,6 +15,7 @@ html
 			p The specified quiz does not exists.
 			p You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
 		else
+			canvas#timeline
 			form(action=action method='post')
 				if editable
 					input(name='title' value=quiz.title)

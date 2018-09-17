@@ -20,9 +20,35 @@ window.onbeforeunload = () => {
 	}
 }
 
+window.addEventListener('scroll', () => {
+	// Yes, I know about https://developer.mozilla.org/docs/Mozilla/Performance/ScrollLinkedEffects
+	// Basically, the canvas position can be arbitrary, it just limits the rendering surface
+
+	const canvas = document.querySelector('canvas#timeline')
+
+	canvas.style.top = window.scrollY
+})
+
+window.addEventListener('resize', () => {
+	const canvas = document.querySelector('canvas#timeline')
+	const rect = canvas.getBoundingClientRect()
+
+	canvas.width = rect.width
+	canvas.height = rect.height
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+	const canvas = document.querySelector('canvas#timeline')
+	const rect = canvas.getBoundingClientRect()
+
+	canvas.width = rect.width
+	canvas.height = rect.height
+})
+
 document.addEventListener('DOMContentLoaded', () => {
 	fixOrders()
 	window.remoteData = gatherData()
+	redrawTimeline()
 })
 
 function registerHandlers(document) {
@@ -165,6 +191,16 @@ function registerHandlers(document) {
 	}
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+		const f = () => {
+			redrawTimeline()
+			requestAnimationFrame(f)
+		}
+
+		f()
+	}
+)
+
 // SlipJS integration
 document.addEventListener('DOMContentLoaded', () => {
 	const tbody = document.querySelector('tbody')
@@ -256,6 +292,93 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	})
 })
+
+function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
+	// Recommended alternative inputSelector: 'tr:not(.slip-reordering) input[name$="[order]"]'
+	const canvas = document.querySelector('canvas#timeline')
+	const canvasRect = canvas.getBoundingClientRect()
+	const ctx = canvas.getContext("2d")
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+	const trs = [...document.querySelectorAll('tr')]
+		.filter(tr => tr.querySelector(inputSelector))
+		.filter(tr => tr.querySelector(inputSelector).value !== '')
+		.filter(tr => isFinite(tr.querySelector(inputSelector).value))
+		.filter(tr => {
+			const rect = tr.getBoundingClientRect()
+			return canvasRect.top < rect.top && rect.bottom < canvasRect.bottom
+		})
+		.sort((a, b) => a.querySelector(inputSelector).value
+			.localeCompare(b.querySelector(inputSelector).value, locale, {numeric: true}))
+
+	if (trs.length < 2) return
+
+	const firstValue = parseInt(trs[0].querySelector(inputSelector).value || 0)
+	const firstMiddle = calcMiddle(trs[0])
+	const firstTop = trs[0].querySelector(inputSelector).getBoundingClientRect().top
+	const firstBottom = trs[0].querySelector(inputSelector).getBoundingClientRect().bottom
+
+	const lastValue = parseInt(trs[trs.length - 1].querySelector(inputSelector).value || 0)
+	const lastMiddle = calcMiddle(trs[trs.length - 1])
+	const lastTop = trs[trs.length - 1].querySelector(inputSelector).getBoundingClientRect().top
+	const lastBottom = trs[trs.length - 1].querySelector(inputSelector)
+		.getBoundingClientRect().bottom
+
+	const valueRange = lastValue - firstValue
+	const middleRange = lastMiddle - firstMiddle
+
+	//*
+	let dotX = 0
+	try {
+		dotX = parseFloat(getComputedStyle(canvas).getPropertyValue('--dotX'))
+		assert(isFinite(dotX), "dotX is finite")
+	} catch (e) {
+		console.error(e.message)
+	}
+	//*/let dotX = 5
+
+	ctx.strokeStyle = (firstMiddle < lastMiddle) ? 'green' : 'red'
+	ctx.beginPath()
+	ctx.moveTo(dotX, cy(Math.min(firstTop, lastTop)))
+	ctx.lineTo(dotX, cy(Math.max(firstBottom, lastBottom)))
+	ctx.stroke()
+
+	ctx.strokeStyle = 'black'
+	ctx.fillStyle = 'black'
+	trs.forEach(tr => {
+		const middle = calcMiddle(tr)
+		const value = parseInt(tr.querySelector(inputSelector).value || 0)
+
+		const dotY = cy(middleRange / valueRange * (value - firstValue) + firstMiddle)
+		const targetX = cx(tr.getBoundingClientRect().left)
+		const targetY = cy(middle)
+
+		//console.log(tr, dotY, targetX, targetY)
+
+		ctx.beginPath()
+		ctx.arc(dotX, dotY, 3, 0, 2 * Math.PI)
+		ctx.fill()
+
+		ctx.beginPath()
+		ctx.moveTo(dotX, dotY)
+		ctx.lineTo(targetX, targetY)
+		ctx.stroke()
+	})
+
+	function cx(x) {
+		return (x - canvasRect.left) / canvasRect.width * canvas.width
+	}
+
+	function cy(y) {
+		return (y - canvasRect.top) / canvasRect.height * canvas.height
+	}
+
+	function calcMiddle(element) {
+		const rect = element.getBoundingClientRect()
+		return (rect.top + rect.bottom) / 2
+	}
+}
 
 function reorderStart(trs = document.querySelectorAll('tr')) {
 	if (trs instanceof HTMLElement) trs = arguments
