@@ -536,26 +536,34 @@ function gatherData() {
 	return dataObject
 }
 
-function updateData(data = gatherData(), reload = false) {
+function updateData(data = gatherData(), handleFinally = false) {
 	const promise = postData("update", data)
 
-	if (reload) {
+	if (handleFinally) {
 		promise.then(() => {
 			allowPageLeave()
 			return location.reload()
+		}, () => {
+			alert("Failed to save data")
 		})
 	}
+
+	return promise
 }
 
-function newQuiz(data = gatherData(), redirect = false) {
+function newQuiz(data = gatherData(), handleFinally = false) {
 	const promise = postData("new", data)
 
-	if (redirect) {
+	if (handleFinally) {
 		promise.then(() => {
 			allowPageLeave()
 			return window.location = 'index.html'
+		}, () => {
+			alert("Failed create new quiz")
 		})
 	}
+
+	return promise
 }
 
 function checkForm(force = false) {
@@ -712,7 +720,6 @@ function postData(url, data) {
 		window.remoteData = data
 	}, e => {
 		console.error(e)
-		if (reload) alert("Failed to save data")
 	})
 
 	return promise
