@@ -170,6 +170,11 @@ function registerHandlers(document) {
 
 	customClick('form[action="update"] input[type=submit]', () => updateData(), false)
 
+	handleEvent('*', 'change', () => {
+		if (!window.reorderInProgress) fs(checkForm())
+	})
+	fs(() => checkForm())
+  
 	customClick('form[action="new"] input[type=submit]', () => newQuiz(undefined, true))
 
 	function customClick(selector, handler, required = true) {
@@ -472,6 +477,7 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 }
 
 function reorderStart(trs = document.querySelectorAll('tr')) {
+	window.reorderInPorgress = true
 	if (trs instanceof HTMLElement) trs = arguments
 	for (tr of trs) {
 		tr.style.transition = 'none'
@@ -480,6 +486,8 @@ function reorderStart(trs = document.querySelectorAll('tr')) {
 }
 
 function reorderEnd(trs = document.querySelectorAll('tr')) {
+	window.reorderInPorgress = false
+	fs(checkForm())
 	if (trs instanceof HTMLElement) trs = arguments
 	trs.forEach(tr => {
 		tr.style.transition = 'none'
