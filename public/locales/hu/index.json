@@ -1,0 +1,12 @@
+{
+  "title": "Kronologia kezdőoldal",
+  "heading": "Kronologia",
+  "instruction": "Lehetőségek:",
+  "links": {
+    "auth": "Bejelentkezés",
+    "quizzes": "Kvízek listázása",
+    "wiki": "A program leírása"
+  },
+  "lngInstruction": "Elérhető nyelvek:",
+  "lng_dev": "fejlesztői"
+}

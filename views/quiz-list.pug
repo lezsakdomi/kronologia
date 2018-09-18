@@ -1,11 +1,16 @@
 html
 	head
 		title Quiz list
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/i18next/11.9.0/i18next.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@1.5.1/i18nextXHRBackend.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@2.2.3/i18nextBrowserLanguageDetector.min.js")
+		script(src="/quiz-list.js")
 	body
+		h1 Quizzes
 		ul
 			for quiz in quizzes
 				li: form
 					a(href=quiz._id + '/form.html')= quiz.title
 					| &nbsp;
-					button(formaction=quiz._id + '/edit.html') edit
-		a(href='new.html'): button +
+					button.edit(formaction=quiz._id + '/edit.html') edit
+		a(href='new.html'): button#add +

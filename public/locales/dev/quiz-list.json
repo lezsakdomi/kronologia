@@ -1,0 +1,8 @@
+{
+  "title": "Quiz list",
+  "heading": "Quizzes",
+  "buttons": {
+    "add": "+ New quiz",
+    "edit": "✎ Edit"
+  }
+}

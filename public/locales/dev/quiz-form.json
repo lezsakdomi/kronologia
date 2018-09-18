@@ -1,0 +1,22 @@
+{
+  "messages": {
+    "notfound": "The specified quiz does not exists.",
+    "invalid": "You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹"
+  },
+  "fields": {
+    "title": "📛 Title",
+    "question": "❔ Question",
+    "answer": "❕ Answer",
+    "order": "↕ Order",
+    "showBg": "🎨 Show colors"
+  },
+  "buttons": {
+    "add": "+ Add",
+    "submit": "Submit for $t(glossary:{{context}})",
+    "submit_new": "✔ Create",
+    "submit_check": "☑ Check",
+    "submit_update": "⇫ Update",
+    "sort": "⥯ Sort by answers",
+    "renumber": "＃ Renumber"
+  }
+}

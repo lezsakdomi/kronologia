@@ -10,7 +10,28 @@ if (locale === undefined) {
 	locale = "en"
 }
 
-document.addEventListener('DOMContentLoaded', () => registerHandlers(document))
+const i18n = new Promise((resolve, reject) => i18next
+	.use(i18nextXHRBackend)
+	.use(i18nextBrowserLanguageDetector)
+	.init({
+		fallBackLng: locale,
+		debug: true,
+		ns: ['quiz-form', 'glossary'],
+		defaultNS: 'quiz-form',
+		backend: {
+			loadPath: "/locales/{{lng}}/{{ns}}.json"
+		}
+	}, (err, t) => {
+		if (err) {
+			console.error(err)
+			//reject(err)
+			resolve(t)
+		} else {
+			resolve(t)
+		}
+	}))
+
+document.addEventListener('DOMContentLoaded', () => prepareDocument(document))
 
 window.onbeforeunload = () => {
 	if (!window.remoteData) return // No initialization yet
@@ -112,7 +133,7 @@ function registerHandlers(document) {
 			<div class="remove"></div>
 		</td>
 	</tr>`)
-		registerHandlers(tbody.lastChild)
+		prepareDocument(tbody.lastChild)
 		document.querySelector('input[name="entries[' + eid + '][question]"]').focus()
 	}, false)
 
@@ -189,6 +210,76 @@ function registerHandlers(document) {
 			console.debug("Mock event for " + selector + " dispatched", elements, handler)
 		}
 	}
+}
+
+function localize(document) {
+	translateContents('p#quiznotfound', 'messages.notfound')
+
+	translateContents('p#invalidquiz', 'messages.invalid')
+
+	translateInput('title')
+
+	translateInput('question')
+
+	translateInput('answer')
+
+	translateInput('order')
+
+	translateButton('add')
+
+	translateProperty('input[type="submit"]', 'value', 'buttons.submit',
+		({form: {attributes: {action: {value: a}}}}) => ({context: a, defaultValue: a}))
+
+	translateLabel('showBg')
+
+	translateButton('sort')
+
+	translateButton('renumber')
+
+	function translateContents(selector, keys, options = {}) {
+		return translateProperty(selector, 'innerHTML', keys, options)
+	}
+
+	function translateInput(name, options = {}) {
+		return translateProperty(
+			`input[name="${name}"], input[name$="[${name}]"]`, 'placeholder',
+			[`fields.${name}`, 'fields.generic'],
+			e => ({context: e.type, ...(options instanceof Function ? options(e) : options)}))
+	}
+
+	function translateButton(name, options = {}) {
+		return translateContents(
+			`button#${name}`,
+			`buttons.${name}`, options)
+	}
+
+	function translateLabel(name, options = {}) {
+		return translateContents(`label[for="${name}"]`,
+			[`fields.${name}`, 'fields.generic'], e => {
+				const myOptions = {}
+				const input = document.querySelector(`input#${name}`)
+				if (input) myOptions.context = input.type
+
+				return {...myOptions, ...(options instanceof Function ? options(e) : options)}
+			})
+	}
+
+	function translateProperty(selector, property, keys, options = {}) {
+		const elements = document.querySelectorAll(selector)
+		elements.forEach(e => i18n.then(t => {
+			e[property] = t(keys, {
+				defaultValue: e[property],
+				...(options instanceof Function ? options(e) : options)
+			})
+			console.debug(`translateProperty(${selector}.${property}, ${keys}, `, options, `) ==`,
+				e[property])
+		}))
+	}
+}
+
+function prepareDocument(document) {
+	registerHandlers(document)
+	localize(document)
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,0 +1,12 @@
+{
+  "title": "Bejelentkezés a Kronologia-ba",
+  "heading": "Bejelentkezés",
+  "note": "<b>Ez az alkalmazás még nincs adaptálva az általános adatvédelmi rendelethez.</b> A továbblépéssel elfogadja, hogy minden információ, amit az alábbi — harmadik fél által üzemeltetett — authentikációs szolgáltatók révén megosztott velünk, tárolásra kerül, és a jövőben az oldal felhasználhatja azokat az oldal funkcióinak ellátásához. Az eltárolt adatok jelenleg még csak a felhasználók azonosítását szolgálják. Az elmentett információkat megtekintheti a <a href=\"/auth/\">/auth</a> címen, és azok törlését kezdeményezheti az oldal adminsztrátoránál. Arról, hogy milyen információk kerülhetnek mentésre, a <a href=\"http://www.passportjs.org/docs/profile/\"> PassportJS dokumentációja</a> ad tájékoztatást. Bejelentkezés után az azonosítás fenntartása érdekében egy <a href=\"https://videa.hu/videok/origo/tudomany-technika/mire-jo-a-suti-bongeszoben-adatvedelem-bongeszo-cookie-1GzBtgRqs19jtInW\">HTTP-sütit</a> fogunk létrehozni.",
+  "instruction": "Amennyiben a fentieket elfogadja, kérjük jelentkezzen be az alábbi szolgáltatások egyikével:",
+  "instruction_0": "Jelenleg nincs mód bejelentkezésre, egy szolgáltatás sem érhető el",
+  "instruction_1": "Amennyiben a fentieket elfogadja, kérjük jelentkezzen be az alábbi szolgáltatással:",
+  "providerOption": "Bejelentkezés {{context, c => c[0].toUpperCase() + c.slice(1)}} használatával",
+  "providerOption_google": "Bejelentkezés Google-fiókkal",
+  "providerOption_twitter": "Bejelentkezés Twitterrel",
+  "providerOption_facebook": "Bejelentkezés Facebookkal"
+}

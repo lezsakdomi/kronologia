@@ -1,0 +1,22 @@
+{
+  "messages": {
+    "notfound": "A kvíz nem létezik.",
+    "invalid": "A megadott URL érvénytelen, vagy nincs jogosultságod ennek a kvíznek az eléréséhez. Vagy ez létezett, csak valaki időközben törölte ☹"
+  },
+  "fields": {
+    "title": "📛 Cím",
+    "question": "❔ Kérdés",
+    "answer": "❕ Válasz",
+    "order": "↕ Sorrend",
+    "showBg": "🎨 Színek"
+  },
+  "buttons": {
+    "add": "+ Új kérdés",
+    "submit": "Elküldés $t(glossary:{{context}}_to)",
+    "submit_new": "✔ Létrehozás",
+    "submit_check": "☑ Ellenőrzés",
+    "submit_update": "⇫ Frissítés",
+    "sort": "⥯ Rendezés válaszok szerint",
+    "renumber": "＃ Újraszámozás"
+  }
+}
