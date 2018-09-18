@@ -1,6 +1,6 @@
 const express = require('express')
 const MongoClient = require('mongodb')
-const mongo = require('../mongo')
+const mongo = require('./mongo')
 const debug = require('debug')('kronologia:backend:quizRouter')
 
 const router = express.Router({})
@@ -33,7 +33,7 @@ router.get('/index.html', async (req, res, next) => {
 	try {
 		res.locals.quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1})
 			.toArray()
-		res.render('quiz-list')
+		res.render('quiz-list/template')
 	} catch (e) {
 		next(e)
 	}
@@ -41,7 +41,7 @@ router.get('/index.html', async (req, res, next) => {
 
 //noinspection JSUnresolvedFunction
 router.get('/new.html', (req, res) => {
-	return res.render('quiz-form', {quiz: {}, editable: true, action: "new"})
+	return res.render('quiz-form/template', {quiz: {}, editable: true, action: "new"})
 })
 
 // noinspection JSUnresolvedFunction
@@ -206,7 +206,7 @@ quizRouter.post('/check', (req, res, next) => {
 
 // noinspection JSUnresolvedFunction
 quizRouter.get('/form.html', (req, res) => {
-	return res.render('quiz-form', {action: 'check', editable: false})
+	return res.render('quiz-form/template', {action: 'check', editable: false})
 })
 
 // noinspection JSUnresolvedFunction
@@ -225,7 +225,7 @@ quizRouter.post('/update', async (req, res, next) => {
 
 // noinspection JSUnresolvedFunction
 quizRouter.get('/edit.html', (req, res) => {
-	return res.render('quiz-form', {action: 'update', editable: true})
+	return res.render('quiz-form/template', {action: 'update', editable: true})
 })
 
 function normalizeInput(quiz) {

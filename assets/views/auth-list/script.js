@@ -5,10 +5,10 @@ const i18n = new Promise((resolve, reject) => {
 		.init({
 			fallBackLng: 'dev',
 			debug: true,
-			ns: ['auth-list', 'glossary'],
+			ns: 'auth-list',
 			defaultNS: 'auth-list',
 			backend: {
-				loadPath: "/locales/{{lng}}/{{ns}}.json"
+				loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json'
 			},
 			interpolation: {
 				format: (value, format, lng) => Function('return (' + format + ')')()(value, lng)

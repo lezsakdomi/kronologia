@@ -16,10 +16,10 @@ const i18n = new Promise((resolve, reject) => i18next
 	.init({
 		fallBackLng: locale,
 		debug: true,
-		ns: ['quiz-form', 'glossary'],
+		ns: 'quiz-form',
 		defaultNS: 'quiz-form',
 		backend: {
-			loadPath: "/locales/{{lng}}/{{ns}}.json"
+			loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json'
 		}
 	}, (err, t) => {
 		if (err) {

@@ -1,7 +1,7 @@
 const createError = require('http-errors')
 const express = require('express')
 const passport = require('passport')
-const mongo = require('../mongo')
+const mongo = require('./mongo')
 const config = require('config')
 const debug = require('debug')('kronologia:backend:app:auth')
 
@@ -84,7 +84,8 @@ for (let provider in config.get("auth")) {
 })()
 
 // noinspection JSUnresolvedFunction
-router.get('/index.html', (req, res) => res.render('auth-list', {user: req.user, validProviders}))
+router.get('/index.html',
+	(req, res) => res.render('auth-list/template', {user: req.user, validProviders}))
 
 // noinspection JSUnresolvedFunction
 router.use('/:authStrategy', //TODO POST (or get)

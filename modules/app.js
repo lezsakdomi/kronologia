@@ -14,10 +14,11 @@ module.exports = app
 app.locals.config = config
 app.locals.randomColor = require('randomcolor')
 app.set('view engine', 'pug')
+app.set('views', 'assets/views')
 app.use(logger('dev'))
 // noinspection JSUnresolvedFunction
-app.use(stylus.middleware('public'))
-app.use(express.static('public'))
+app.use('/assets', stylus.middleware('assets'))
+app.use('/assets', express.static('assets'))
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -36,9 +37,9 @@ if (config.get('session')) {
 	app.use(passport.session())
 }
 
-app.use('/auth', require('./routes/auth'))
-app.use('/quizzes', require('./routes/quizzes'))
+app.use('/auth', require('./auth-router'))
+app.use('/quizzes', require('./quizzes-router'))
 // noinspection JSUnresolvedFunction
 app.get('/', (req, res) => res.status(307).redirect('/index.html'))
 // noinspection JSUnresolvedFunction
-app.get('/index.html', (req, res) => res.render('index'))
+app.get('/index.html', (req, res) => res.render('index/template'))

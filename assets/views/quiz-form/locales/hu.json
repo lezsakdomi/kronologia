@@ -12,7 +12,7 @@
   },
   "buttons": {
     "add": "+ Új kérdés",
-    "submit": "Elküldés $t(glossary:{{context}}_to)",
+    "submit": "Elküldés ({{context}})",
     "submit_new": "✔ Létrehozás",
     "submit_check": "☑ Ellenőrzés",
     "submit_update": "⇫ Frissítés",

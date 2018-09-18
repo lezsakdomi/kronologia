@@ -12,7 +12,7 @@
   },
   "buttons": {
     "add": "+ Add",
-    "submit": "Submit for $t(glossary:{{context}})",
+    "submit": "Submit for {{context}}",
     "submit_new": "✔ Create",
     "submit_check": "☑ Check",
     "submit_update": "⇫ Update",
