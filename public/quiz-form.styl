@@ -1,7 +1,21 @@
+small-treshold = 400px
+medium-treshold = 500px
+
+body
+	margin 0
+
+table-margin-left-min = 30px
+table-margin-left-max = 80px
+table-width-max = 650px
+
 table
-	width 100%
-	@media (min-width: 650px)
-		width 650px
+	margin-left table-margin-left-min
+	width 'calc(100% - %s)' % table-margin-left-min
+	@media (min-width: table-margin-left-min + table-width-max)
+		width table-width-max
+		margin-left 'calc(100% - %s)' % table-width-max
+		@media (min-width: table-margin-left-max + table-width-max)
+			margin-left table-margin-left-max
 
 tbody
 	display flex
@@ -23,6 +37,14 @@ tr:hover, .slip-reordering, .show-bg tr
 
 td:first-of-type
 	flex-grow 1
+	@media (max-width medium-treshold)
+		word-break break-all
+
+h1
+	margin 20px
+
+.question
+	align-items center
 
 input[name$='[order]']
 	width 4em
@@ -32,21 +54,27 @@ input[name$='[order]']
 		border-color transparent
 		visibility hidden
 
+answerinput-width-min = 4em
+answerinput-width-regular = 5em
+answerinput-width-max = 15em
+
 input[name$='[answer]']
-	width 15em
+	width answerinput-width-max
 	transition width 0.2s ease-in-out
 	&:not(:focus)
-		width 5em
-		@media (min-width: 500px)
-			width unquote('calc(100vw - 500px + 4em)')
-		@media (min-width: 650px)
-			width 15em
+		width answerinput-width-regular
+		@media (min-width: medium-treshold)
+			width 'calc(100vw - %s + %s)' % (medium-treshold answerinput-width-min)
+			@media (min-width: table-margin-left-min + table-width-max)
+				width answerinput-width-max
 
 .down, .up
 	width 0
 	height 0
 	border-left 20px solid transparent
 	border-right @border-left
+	@media (max-width: small-treshold)
+		display none
 
 .down
 	border-top 20px solid #48f
@@ -93,3 +121,18 @@ input[name="title"]
 	background-position center
 	background-repeat no-repeat
 	width 1em
+
+canvas#timeline
+	position absolute
+	top 0
+	left 0
+	height 100%
+	width 100%
+	z-index -1
+	--dotX 5
+	@media (max-width medium-treshold)
+		--dotX 3
+		@media (max-width small-treshold)
+			--dotX 1
+
+//background radial-gradient(ellipse at center, #0f0 0%, #ff0 50%, #f00 100%)

@@ -1,6 +1,6 @@
 %YAML1.2
 ---
-locale: LANG
+locale: LOCALE
 mongo:
   url: MONGODB_URI
   db: MONGODB_DB

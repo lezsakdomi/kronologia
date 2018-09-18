@@ -1,0 +1,14 @@
+{
+  "title": "Kronologia homepage",
+  "heading": "Kronologia",
+  "instruction": "The following options are available at the site:",
+  "instruction_1": "The following option is available at the site:",
+  "links": {
+    "auth": "Authenticate",
+    "quizzes": "List quizzes",
+    "wiki": "Application documentation"
+  },
+  "lngInstruction": "Available languages:",
+  "lng": "{{context, lng => lng.toUpperCase()}}",
+  "lng_dev": "untranslated"
+}

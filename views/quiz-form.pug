@@ -5,6 +5,9 @@ html
 		link(rel='stylesheet' href='/quiz-form.css')
 		script(src="https://cdn.jsdelivr.net/npm/slipjs@2/slip.js")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/i18next/11.9.0/i18next.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@1.5.1/i18nextXHRBackend.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@2.2.3/i18nextBrowserLanguageDetector.min.js")
 		script.
 			shuffleFactor = !{JSON.stringify(config.get("shuffleFactor"))}
 			autoOrdering = !{JSON.stringify(config.get("autoOrdering"))}
@@ -12,12 +15,13 @@ html
 		script(src='/quiz-form.js')
 	body
 		unless quiz
-			p The specified quiz does not exists.
-			p You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
+			p#quiznotfound The specified quiz does not exists.
+			p#invalidquiz You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
 		else
+			canvas#timeline
 			form(action=action method='post')
 				if editable
-					input(name='title' value=quiz.title)
+					input(name='title' value=quiz.title placeholder="Title")
 				else
 					h1= quiz.title
 				table

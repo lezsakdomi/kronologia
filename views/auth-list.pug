@@ -1,9 +1,13 @@
 html
 	head
 		title Authenticate with Kronologia
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/i18next/11.9.0/i18next.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@1.5.1/i18nextXHRBackend.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@2.2.3/i18nextBrowserLanguageDetector.min.js")
+		script(src="/auth-list.js")
 	body
 		h1 Authentication
-		p.
+		p#note.
 			<b>This application is not GDPR ready.</b>
 			By proceeding you accept, that all information shared with this site
 			using one of the third party authentication providers will be stored
@@ -14,7 +18,7 @@ html
 			PassportJS documentation</a>. After login, a cookie will be saved
 			which identifies you. <i>By proceeding, you also sell your soul to
 			us.</i>
-		p The following authentication providers are available:
+		p#instruction The following authentication providers are available:
 		ul
 			for provider in validProviders
-				li: a(href=provider)= provider[0].toUpperCase() + provider.slice(1)
+				li#provider: a(href=provider)= provider[0].toUpperCase() + provider.slice(1)

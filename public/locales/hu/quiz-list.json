@@ -1,0 +1,8 @@
+{
+  "title": "Kvíz lista",
+  "heading": "Kvízek",
+  "buttons": {
+    "add": "+ Új kvíz létrehozása",
+    "edit": "✎ Szerkesztés"
+  }
+}
