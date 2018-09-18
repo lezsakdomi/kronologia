@@ -1,7 +1,10 @@
 {
   "messages": {
     "notfound": "A kvíz nem létezik.",
-    "invalid": "A megadott URL érvénytelen, vagy nincs jogosultságod ennek a kvíznek az eléréséhez. Vagy ez létezett, csak valaki időközben törölte ☹"
+    "invalid": "A megadott URL érvénytelen, vagy nincs jogosultságod ennek a kvíznek az eléréséhez. Vagy ez létezett, csak valaki időközben törölte ☹",
+    "postfail": "Az adatok elküldése meghiúsult",
+    "postfail_update": "Nem sikerült a távoli adatok frissítése",
+    "postfail_new": "Nem sikerült az új kvíz létrehozása"
   },
   "fields": {
     "title": "📛 Cím",

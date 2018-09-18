@@ -536,30 +536,26 @@ function gatherData() {
 	return dataObject
 }
 
-function updateData(data = gatherData(), handleFinally = false) {
-	const promise = postData("update", data)
+function updateData(data = gatherData(), handleResult = false) {
+	const promise = postData("update", data, handleResult)
 
-	if (handleFinally) {
+	if (handleResult) {
 		promise.then(() => {
 			allowPageLeave()
 			return location.reload()
-		}, () => {
-			alert("Failed to save data")
 		})
 	}
 
 	return promise
 }
 
-function newQuiz(data = gatherData(), handleFinally = false) {
-	const promise = postData("new", data)
+function newQuiz(data = gatherData(), handleResult = false) {
+	const promise = postData("new", data, handleResult)
 
-	if (handleFinally) {
+	if (handleResult) {
 		promise.then(() => {
 			allowPageLeave()
 			return window.location = 'index.html'
-		}, () => {
-			alert("Failed create new quiz")
 		})
 	}
 
@@ -702,7 +698,7 @@ function removeTr(tr_or_eid) {
 	tr_or_eid.parentElement.removeChild(tr_or_eid)
 }
 
-function postData(url, data) {
+function postData(url, data, handleFail = false) {
 	const promise = fetch(url, {
 		method: "POST",
 		headers: {
@@ -722,7 +718,22 @@ function postData(url, data) {
 		console.error(e)
 	})
 
+	if (handleFail) {
+		promise.catch(e => {
+			i18nAlert('messages.postfail', "Failed to post data", {context: url, error: e})
+		})
+	}
+
 	return promise
+}
+
+function i18nAlert(key, message = "Something happened", options = {}) {
+	i18n.then(t => {
+		const translatedMessage = t(key, {defaultValue: message, ...options})
+		alert(translatedMessage)
+	}, () => {
+		alert(message)
+	})
 }
 
 function allowPageLeave() {
