@@ -4,7 +4,8 @@
     "invalid": "You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹",
     "postfail": "Failed to send data to server",
     "postfail_update": "Failed to update remote data",
-    "postfail_new": "Failed to create new quiz"
+    "postfail_new": "Failed to create new quiz",
+    "notsaved": "The entered data is not saved"
   },
   "fields": {
     "title": "📛 Title",

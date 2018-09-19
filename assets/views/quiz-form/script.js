@@ -24,11 +24,10 @@ const i18n = new Promise((resolve, reject) => i18next
 	}, (err, t) => {
 		if (err) {
 			console.error(err)
-			//reject(err)
-			resolve(t)
-		} else {
-			resolve(t)
+			//return reject(err)
 		}
+		i18n.t = t
+		resolve(t)
 	}))
 
 document.addEventListener('DOMContentLoaded', () => prepareDocument(document))
@@ -39,7 +38,11 @@ window.onbeforeunload = () => {
 	} // No initialization yet
 
 	if (JSON.stringify(gatherData()) !== JSON.stringify(window.remoteData)) {
-		return 'Nothing were saved. Are you sure?'
+		let msg = 'Nothing were saved. Are you sure?'
+		if (i18n.t) {
+			msg = i18n.t('messages.notsaved', {defaultValue: msg})
+		}
+		return msg
 	}
 }
 
