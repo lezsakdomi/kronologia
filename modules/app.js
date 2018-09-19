@@ -22,7 +22,9 @@ app.use('/assets', express.static('assets'))
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-if (config.get('acceptMultipart')) app.use(require('multer')().none())
+if (config.get('acceptMultipart')) {
+	app.use(require('multer')().none())
+}
 if (config.get('session')) {
 	// noinspection JSCheckFunctionSignatures
 	app.use(session({

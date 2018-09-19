@@ -9,6 +9,6 @@
     "wiki": "Application documentation"
   },
   "lngInstruction": "Available languages:",
-  "lng": "{{context, lng => lng.toUpperCase()}}",
+  "lng": "{{context, (lng) => lng.toUpperCase()}}",
   "lng_dev": "untranslated"
 }

@@ -9,39 +9,43 @@ const router = express.Router({})
 module.exports = router
 
 const validProviders = []
-for (let provider in config.get("auth")) {
-	if (!config.has(`auth.${provider}`)) continue
+for (let provider in config.get('auth')) {
+	if (!config.has(`auth.${provider}`)) {
+		continue
+	}
 	const strategyConfig = config.get(`auth.${provider}`)
-	if (!strategyConfig) continue
+	if (!strategyConfig) {
+		continue
+	}
 
-	debug("Processing auth provider '%s'...", provider)
+	debug('Processing auth provider \'%s\'...', provider)
 	// noinspection JSUnresolvedVariable
 	const providerDebug = require('debug')(debug.namespace + ':' + provider)
 
-	providerDebug("Strategy configured with the following options:\n%O", strategyConfig)
+	providerDebug('Strategy configured with the following options:\n%O', strategyConfig)
 
 	const moduleName =
 		strategyConfig.has(`module`)
 			? strategyConfig.get(`module`)
 			: `passport-${provider}`
-	providerDebug("Module: %o", moduleName)
+	providerDebug('Module: %o', moduleName)
 
 	const strategyName =
 		strategyConfig.has(`strategy`)
 			? strategyConfig.get(`strategy`)
-			: "Strategy"
-	providerDebug("Strategy: %o", strategyName)
+			: 'Strategy'
+	providerDebug('Strategy: %o', strategyName)
 
-	providerDebug("Loading authentication strategy...")
+	providerDebug('Loading authentication strategy...')
 	const Strategy = require(moduleName)[strategyName]
-	providerDebug("Authentication strategy loaded")
+	providerDebug('Authentication strategy loaded')
 	// noinspection JSUnresolvedFunction
 	passport.use(new Strategy(strategyConfig, (...args) => {
 		const tokens = args.slice(0, args.length - 3)
 		const profile = args[args.length - 2]
 		const done = args[args.length - 1]
 
-		providerDebug("Authentication happened with tokens %o. Got profile %O", tokens, profile)
+		providerDebug('Authentication happened with tokens %o. Got profile %O', tokens, profile)
 
 		done(null, profile)
 	}))
@@ -73,14 +77,14 @@ for (let provider in config.get("auth")) {
 			}
 		})
 	} catch (e) {
-		console.warn("Failed to initiate passport serialization, using " +
-			"space-consuming fallback method instead. Cause: %O", e)
+		console.warn('Failed to initiate passport serialization, using ' +
+			'space-consuming fallback method instead. Cause: %O', e)
 		// noinspection JSUnresolvedFunction
 		passport.serializeUser((user, done) => done(null, user))
 		// noinspection JSUnresolvedFunction
 		passport.deserializeUser((serialized, done) => done(null, serialized))
 	}
-	debug("Serialization configured")
+	debug('Serialization configured')
 })()
 
 // noinspection JSUnresolvedFunction
@@ -91,7 +95,7 @@ router.get('/index.html',
 router.use('/:authStrategy', //TODO POST (or get)
 	function ({params: {authStrategy: strategy}}, undefined, next) {
 		if (!config.has(`auth.${strategy}`) || !config.get(`auth.${strategy}`)) {
-			return next(createError(404, "Authentication strategy not supported"))
+			return next(createError(404, 'Authentication strategy not supported'))
 		}
 
 		const options =
@@ -99,7 +103,7 @@ router.use('/:authStrategy', //TODO POST (or get)
 		// noinspection JSUnresolvedFunction
 		const authenticator = passport.authenticate(strategy, {
 			session: Boolean(config.get('session')),
-			...options
+			...options,
 		})
 		authenticator(...arguments)
 	},

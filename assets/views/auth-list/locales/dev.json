@@ -5,7 +5,7 @@
   "instruction": "If you agree, please authenticate using one of the following providers:",
   "instruction_0": "No provider is available at the moment",
   "instruction_1": "If you agree, please authenticate using following provider:",
-  "providerOption": "Log in using {{context, c => c[0].toUpperCase() + c.slice(1)}}",
+  "providerOption": "Log in using {{context, (c) => c[0].toUpperCase() + c.slice(1)}}",
   "providerOption_google": "Authenticate using your Google account",
   "providerOption_twitter": "Authenticate using Twitter",
   "providerOption_facebook": "Log in with Facebook"

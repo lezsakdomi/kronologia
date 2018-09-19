@@ -7,7 +7,7 @@ if (autoOrdering === undefined) {
 }
 
 if (locale === undefined) {
-	locale = "en"
+	locale = 'en'
 }
 
 const i18n = new Promise((resolve, reject) => i18next
@@ -19,8 +19,8 @@ const i18n = new Promise((resolve, reject) => i18next
 		ns: 'quiz-form',
 		defaultNS: 'quiz-form',
 		backend: {
-			loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json'
-		}
+			loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json',
+		},
 	}, (err, t) => {
 		if (err) {
 			console.error(err)
@@ -34,10 +34,12 @@ const i18n = new Promise((resolve, reject) => i18next
 document.addEventListener('DOMContentLoaded', () => prepareDocument(document))
 
 window.onbeforeunload = () => {
-	if (!window.remoteData) return // No initialization yet
+	if (!window.remoteData) {
+		return
+	} // No initialization yet
 
 	if (JSON.stringify(gatherData()) !== JSON.stringify(window.remoteData)) {
-		return "Nothing were saved. Are you sure?"
+		return 'Nothing were saved. Are you sure?'
 	}
 }
 
@@ -82,9 +84,9 @@ function registerHandlers(document) {
 	}, true)
 
 	Object.entries({
-		".down": generateCleverPushFunction(1),
-		".up": generateCleverPushFunction(-1),
-		".remove": removeTr,
+		'.down': generateCleverPushFunction(1),
+		'.up': generateCleverPushFunction(-1),
+		'.remove': removeTr,
 	}).forEach(([selector, dOrder]) => {
 		customClick(selector, ({target: button}) => {
 			const tr = button.parentElement.parentElement
@@ -115,7 +117,7 @@ function registerHandlers(document) {
 		let eid = 0
 		while (document.querySelector('tr[eid="' + eid + '"]')) eid++
 		const order = [...document.querySelectorAll('input[name$="[order]"]')]
-				.map(input => parseInt(input.value || 0))
+				.map((input) => parseInt(input.value || 0))
 				.reduce((a, v) => Math.max(a, v), 0)
 			+ 1
 		tbody.insertAdjacentHTML('beforeend', `
@@ -142,7 +144,7 @@ function registerHandlers(document) {
 
 		reorderStart()
 		const trs = [...document.querySelectorAll('tr')]
-			.filter(tr => tr.querySelector('input[name$="[answer]"]').value !== '')
+			.filter((tr) => tr.querySelector('input[name$="[answer]"]').value !== '')
 			.sort((tr_a, tr_b) => {
 				// Just checking in alphabetical order
 				const a = tr_a.querySelector('input[name$="[answer]"]').value
@@ -150,8 +152,8 @@ function registerHandlers(document) {
 				return a.localeCompare(b, locale, {ignorePunctuation: true}, 'sort')
 			})
 		trs.forEach((tr, i) => tr.querySelector('input[name$="[order]"]').value = i + 1)
-		trs.forEach(tr => tbody.removeChild(tr))
-		trs.forEach(tr => tbody.appendChild(tr))
+		trs.forEach((tr) => tbody.removeChild(tr))
+		trs.forEach((tr) => tbody.appendChild(tr))
 		reorderEnd()
 	}, false)
 
@@ -162,7 +164,7 @@ function registerHandlers(document) {
 			data.entries = Object.values(data.entries)
 				.sort((a, b) => a.order.localeCompare(b.order, locale, {numeric: true}))
 		} else {
-			console.warn("dataObject.entries is empty!", data)
+			console.warn('dataObject.entries is empty!', data)
 		}
 
 		updateData(data, true)
@@ -171,10 +173,12 @@ function registerHandlers(document) {
 	customClick('form[action="update"] input[type=submit]', () => updateData(), false)
 
 	handleEvent('*', 'change', () => {
-		if (!window.reorderInProgress) fs(checkForm())
+		if (!window.reorderInProgress) {
+			fs(checkForm())
+		}
 	})
 	fs(() => checkForm())
-  
+
 	customClick('form[action="new"] input[type=submit]', () => newQuiz(undefined, true))
 
 	function customClick(selector, handler, required = true) {
@@ -189,20 +193,20 @@ function registerHandlers(document) {
 
 	function handleEvent(selector, event, handler, required = true, fireNow = false) {
 		const elements = document.querySelectorAll(selector)
-		elements.forEach(e => e.addEventListener(event, handler))
+		elements.forEach((e) => e.addEventListener(event, handler))
 
 		if (elements.length === 0) {
 			if (required) {
-				console.warn("Could not find " + selector)
+				console.warn('Could not find ' + selector)
 			} else {
-				console.info(selector + " not present")
+				console.info(selector + ' not present')
 			}
 		} else {
-			console.debug("Handler registered for " + selector, elements, handler)
+			console.debug('Handler registered for ' + selector, elements, handler)
 		}
 
 		if (fireNow) {
-			elements.forEach(element => {
+			elements.forEach((element) => {
 				try {
 					handler.call(this, {
 						type: event,
@@ -212,7 +216,7 @@ function registerHandlers(document) {
 					console.error(e)
 				}
 			})
-			console.debug("Mock event for " + selector + " dispatched", elements, handler)
+			console.debug('Mock event for ' + selector + ' dispatched', elements, handler)
 		}
 	}
 }
@@ -249,7 +253,7 @@ function localize(document) {
 		return translateProperty(
 			`input[name="${name}"], input[name$="[${name}]"]`, 'placeholder',
 			[`fields.${name}`, 'fields.generic'],
-			e => ({context: e.type, ...(options instanceof Function ? options(e) : options)}))
+			(e) => ({context: e.type, ...(options instanceof Function ? options(e) : options)}))
 	}
 
 	function translateButton(name, options = {}) {
@@ -260,10 +264,12 @@ function localize(document) {
 
 	function translateLabel(name, options = {}) {
 		return translateContents(`label[for="${name}"]`,
-			[`fields.${name}`, 'fields.generic'], e => {
+			[`fields.${name}`, 'fields.generic'], (e) => {
 				const myOptions = {}
 				const input = document.querySelector(`input#${name}`)
-				if (input) myOptions.context = input.type
+				if (input) {
+					myOptions.context = input.type
+				}
 
 				return {...myOptions, ...(options instanceof Function ? options(e) : options)}
 			})
@@ -271,10 +277,10 @@ function localize(document) {
 
 	function translateProperty(selector, property, keys, options = {}) {
 		const elements = document.querySelectorAll(selector)
-		elements.forEach(e => i18n.then(t => {
+		elements.forEach((e) => i18n.then((t) => {
 			e[property] = t(keys, {
 				defaultValue: e[property],
-				...(options instanceof Function ? options(e) : options)
+				...(options instanceof Function ? options(e) : options),
 			})
 			console.debug(`translateProperty(${selector}.${property}, ${keys}, `, options, `) ==`,
 				e[property])
@@ -294,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		f()
-	}
+	},
 )
 
 // SlipJS integration
@@ -303,19 +309,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	new Slip(tbody)
 
-	tbody.addEventListener('slip:beforewait', evt => {
+	tbody.addEventListener('slip:beforewait', (evt) => {
 		const {target} = evt
-		if (target.classList.contains('question')) evt.preventDefault()
+		if (target.classList.contains('question')) {
+			evt.preventDefault()
+		}
 	})
 
-	tbody.addEventListener('slip:beforereorder', evt => {
+	tbody.addEventListener('slip:beforereorder', (evt) => {
 		let tr = evt.target
 		while (tr.tagName !== 'TR') tr = tr.parentElement
 
 		tr.lastSlipBeforeReorder = evt
 	})
 
-	tbody.addEventListener('slip:reorder', evt => {
+	tbody.addEventListener('slip:reorder', (evt) => {
 		const {target: tr, detail: {insertBefore}} = evt
 		const orderInput = tr.querySelector('input[name$="[order]"]')
 		const startTime = new Date(tr.lastSlipBeforeReorder.timeStamp)
@@ -327,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (endTime - startTime < 200) { // Just touched
 				if (orderInput.value === '') {
 					orderInput.value = parseInt(document.querySelector(
-						'tr:last-child input[name$="[order]"]'
+						'tr:last-child input[name$="[order]"]',
 					).value || 0) + 1
 					reorderStart()
 					tbody.insertBefore(tr, null)
@@ -342,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (insertBefore === null) {
 				// inserted to end of list
 				orderInput.value = [...document.querySelectorAll('input[name$="[order]"]')]
-						.map(input => parseInt(input.value || 0))
+						.map((input) => parseInt(input.value || 0))
 						.reduce((a, v) => Math.max(a, v), 0)
 					+ 1
 			} else if (tr.previousElementSibling === null || tr.previousElementSibling
@@ -354,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					const shift = insertBefore.querySelector('input[name$="[order]"]').value - 2
 
 					document.querySelectorAll('input[name$="[order]"]:not(:placeholder-shown)')
-						.forEach(orderInput => orderInput.value -= shift)
+						.forEach((orderInput) => orderInput.value -= shift)
 
 					orderInput.value = 1
 				}
@@ -383,7 +391,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				reorderStart()
 				findPositionAndPlace(tr)
 				reorderEnd()
-				if (tr.lastOffsetTop !== tr.nextOffsetTop) console.warn("Reorder was needed")
+				if (tr.lastOffsetTop !== tr.nextOffsetTop) {
+					console.warn('Reorder was needed')
+				}
 			}
 		}
 	})
@@ -393,22 +403,24 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 	// Recommended alternative inputSelector: 'tr:not(.slip-reordering) input[name$="[order]"]'
 	const canvas = document.querySelector('canvas#timeline')
 	const canvasRect = canvas.getBoundingClientRect()
-	const ctx = canvas.getContext("2d")
+	const ctx = canvas.getContext('2d')
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 
 	const trs = [...document.querySelectorAll('tr')]
-		.filter(tr => tr.querySelector(inputSelector))
-		.filter(tr => tr.querySelector(inputSelector).value !== '')
-		.filter(tr => isFinite(tr.querySelector(inputSelector).value))
-		.filter(tr => {
+		.filter((tr) => tr.querySelector(inputSelector))
+		.filter((tr) => tr.querySelector(inputSelector).value !== '')
+		.filter((tr) => isFinite(tr.querySelector(inputSelector).value))
+		.filter((tr) => {
 			const rect = tr.getBoundingClientRect()
 			return canvasRect.top < rect.top && rect.bottom < canvasRect.bottom
 		})
 		.sort((a, b) => a.querySelector(inputSelector).value
 			.localeCompare(b.querySelector(inputSelector).value, locale, {numeric: true}))
 
-	if (trs.length < 2) return
+	if (trs.length < 2) {
+		return
+	}
 
 	const firstValue = parseInt(trs[0].querySelector(inputSelector).value || 0)
 	const firstMiddle = calcMiddle(trs[0])
@@ -428,7 +440,7 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 	let dotX = 0
 	try {
 		dotX = parseFloat(getComputedStyle(canvas).getPropertyValue('--dotX'))
-		assert(isFinite(dotX), "dotX is finite")
+		assert(isFinite(dotX), 'dotX is finite')
 	} catch (e) {
 		console.error(e.message)
 	}
@@ -442,7 +454,7 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 
 	ctx.strokeStyle = 'black'
 	ctx.fillStyle = 'black'
-	trs.forEach(tr => {
+	trs.forEach((tr) => {
 		const middle = calcMiddle(tr)
 		const value = parseInt(tr.querySelector(inputSelector).value || 0)
 
@@ -478,7 +490,9 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 
 function reorderStart(trs = document.querySelectorAll('tr')) {
 	window.reorderInPorgress = true
-	if (trs instanceof HTMLElement) trs = arguments
+	if (trs instanceof HTMLElement) {
+		trs = arguments
+	}
 	for (tr of trs) {
 		tr.style.transition = 'none'
 		tr.lastOffsetTop = tr.offsetTop
@@ -488,8 +502,10 @@ function reorderStart(trs = document.querySelectorAll('tr')) {
 function reorderEnd(trs = document.querySelectorAll('tr')) {
 	window.reorderInPorgress = false
 	fs(checkForm())
-	if (trs instanceof HTMLElement) trs = arguments
-	trs.forEach(tr => {
+	if (trs instanceof HTMLElement) {
+		trs = arguments
+	}
+	trs.forEach((tr) => {
 		tr.style.transition = 'none'
 		tr.nextOffsetTop = tr.offsetTop
 		tr.style.top = tr.lastOffsetTop - tr.nextOffsetTop + 'px'
@@ -511,7 +527,9 @@ function gatherData() {
 			a[key] = value
 		} else if (matches = key.match(/^([^[\]]+)(\[[^[\]]+]*)\[([^[\]]+)]$/)) {
 			const [fullMatch, firstKey, immediateKeys, lastKey] = matches
-			if (!a.hasOwnProperty(firstKey)) a[firstKey] = {}
+			if (!a.hasOwnProperty(firstKey)) {
+				a[firstKey] = {}
+			}
 			let o = a[firstKey]
 			for (let remainImmediateKeys = immediateKeys;
 				 matches = remainImmediateKeys.match(/^\[([^[\]]+)]/);
@@ -527,7 +545,7 @@ function gatherData() {
 			}
 			o[lastKey] = value
 		} else {
-			throw new Error("Can't parse key")
+			throw new Error('Can\'t parse key')
 		}
 
 		return a
@@ -537,7 +555,7 @@ function gatherData() {
 }
 
 function updateData(data = gatherData(), handleResult = false) {
-	const promise = postData("update", data, handleResult)
+	const promise = postData('update', data, handleResult)
 
 	if (handleResult) {
 		promise.then(() => {
@@ -550,7 +568,7 @@ function updateData(data = gatherData(), handleResult = false) {
 }
 
 function newQuiz(data = gatherData(), handleResult = false) {
-	const promise = postData("new", data, handleResult)
+	const promise = postData('new', data, handleResult)
 
 	if (handleResult) {
 		promise.then(() => {
@@ -573,22 +591,24 @@ function checkForm(force = false) {
 		cache: 'reload',
 		redirect: 'follow',
 	})
-		.then(response => response.json())
-		.then(response => {
+		.then((response) => response.json())
+		.then((response) => {
 			response.fails.forEach(({eid, property, message}) => {
 				const input = document.querySelector(
 					`input[name='entries[${eid}][${property}]']`)
-				input.setCustomValidity(message || "Invalid")
+				input.setCustomValidity(message || 'Invalid')
 			})
 			response.successes.forEach(({eid, property}) => {
 				const input = document.querySelector(
 					`input[name='entries[${eid}][${property}]']`)
-				input.setCustomValidity("")
+				input.setCustomValidity('')
 			})
 		})
-		.catch(e => {
+		.catch((e) => {
 			console.error(e)
-			if (force) form.submit()
+			if (force) {
+				form.submit()
+			}
 		})
 }
 
@@ -613,14 +633,14 @@ function fixOrders() {
 	const tbody = document.querySelector('tbody')
 	const trs = [...document.querySelectorAll('tr')]
 
-	trs.forEach(tr => tbody.removeChild(tr))
+	trs.forEach((tr) => tbody.removeChild(tr))
 
 	const unorderedTrs = trs.filter(
-		tr => tr.querySelector('input[name$="[order]"]').value === '')
+		(tr) => tr.querySelector('input[name$="[order]"]').value === '')
 		.sort(() => Math.random() >= shuffleFactor ? 0
 			: Math.random() <= 0.5 ? -1 : 1)
 
-	const orderedTrs = trs.filter(tr => tr.querySelector('input[name$="[order]"]').value !== '')
+	const orderedTrs = trs.filter((tr) => tr.querySelector('input[name$="[order]"]').value !== '')
 		.sort((tr_a, tr_b) => {
 			const a = parseInt(tr_a.querySelector('input[name$="[order]"]').value)
 			const b = parseInt(tr_b.querySelector('input[name$="[order]"]').value)
@@ -633,8 +653,8 @@ function fixOrders() {
 		})
 	}
 
-	unorderedTrs.forEach(tr => tbody.appendChild(tr))
-	orderedTrs.forEach(tr => tbody.appendChild(tr))
+	unorderedTrs.forEach((tr) => tbody.appendChild(tr))
+	orderedTrs.forEach((tr) => tbody.appendChild(tr))
 }
 
 // Returns a lambda (tr -> undefined), which pushes the given tr up or down, according to dOrder
@@ -669,19 +689,23 @@ function generateCleverPushFunction(dOrder) {
 			break
 
 		default:
-			throw new RangeError("Only +1 or -1 is supported as dOrder")
+			throw new RangeError('Only +1 or -1 is supported as dOrder')
 	}
 
 	return (tr) => {
 		if (prev(tr) && more(tr, prev(tr)) && next(tr) && eq(tr, next(tr))) {
 			for (let target = next(tr); target !== null; target = next(target)) {
-				if (!eq(tr, target)) break
+				if (!eq(tr, target)) {
+					break
+				}
 				dec(target)
 			}
 		} else if (prev(tr) && eq(tr, prev(tr))) {
 			inc(tr)
 			for (let target = next(tr); target !== null; target = next(target)) {
-				if (!eq(target, prev(target))) break
+				if (!eq(target, prev(target))) {
+					break
+				}
 				inc(target)
 			}
 		} else {
@@ -700,35 +724,35 @@ function removeTr(tr_or_eid) {
 
 function postData(url, data, handleFail = false) {
 	const promise = fetch(url, {
-		method: "POST",
+		method: 'POST',
 		headers: {
-			"Content-Type": "application/json; charset=utf-8"
+			'Content-Type': 'application/json; charset=utf-8',
 		},
 		body: JSON.stringify(data),
 	})
-		.then(response => response.json())
-		.then(response => {
+		.then((response) => response.json())
+		.then((response) => {
 			assert(response.ok)
 			return response
 		})
 
 	promise.then(() => {
 		window.remoteData = data
-	}, e => {
+	}, (e) => {
 		console.error(e)
 	})
 
 	if (handleFail) {
-		promise.catch(e => {
-			i18nAlert('messages.postfail', "Failed to post data", {context: url, error: e})
+		promise.catch((e) => {
+			i18nAlert('messages.postfail', 'Failed to post data', {context: url, error: e})
 		})
 	}
 
 	return promise
 }
 
-function i18nAlert(key, message = "Something happened", options = {}) {
-	i18n.then(t => {
+function i18nAlert(key, message = 'Something happened', options = {}) {
+	i18n.then((t) => {
 		const translatedMessage = t(key, {defaultValue: message, ...options})
 		alert(translatedMessage)
 	}, () => {
@@ -750,10 +774,14 @@ function fs(...fa) {
 	while (fa.length && (typeof fa[0] === 'number' || fa[0] === null)) {
 		delay = fa.shift()
 	}
-	if (fa.length === 0) return
+	if (fa.length === 0) {
+		return
+	}
 
 	function cb() {
-		if (fa[0]) fa[0]()
+		if (fa[0]) {
+			fa[0]()
+		}
 		fs(delay, ...fa.slice(1))
 	}
 
@@ -766,6 +794,6 @@ function fs(...fa) {
 
 function assert(condition, message) {
 	if (!condition) {
-		throw new Error(message || "Assertion failed")
+		throw new Error(message || 'Assertion failed')
 	}
 }

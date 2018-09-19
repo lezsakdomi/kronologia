@@ -8,10 +8,12 @@ module.exports = router
 
 // noinspection JSUnresolvedFunction
 router.use(async (req, res, next) => {
-	debug("Awaiting MongoDB connection...")
+	debug('Awaiting MongoDB connection...')
 	try {
 		req.db = await mongo
-		if (1 === 2) req.db = MongoClient.connect("", {})
+		if (1 === 2) {
+			req.db = MongoClient.connect('', {})
+		}
 		next()
 	} catch (e) {
 		next(e)
@@ -41,7 +43,7 @@ router.get('/index.html', async (req, res, next) => {
 
 //noinspection JSUnresolvedFunction
 router.get('/new.html', (req, res) => {
-	return res.render('quiz-form/template', {quiz: {}, editable: true, action: "new"})
+	return res.render('quiz-form/template', {quiz: {}, editable: true, action: 'new'})
 })
 
 // noinspection JSUnresolvedFunction
@@ -63,7 +65,7 @@ const quizRouter = express.Router({})
 // noinspection JSUnresolvedFunction
 router.use('/:qid', async (req, res, next) => {
 	// noinspection JSUnresolvedVariable
-	debug("Fetching quiz '%s'...", req.params.qid)
+	debug('Fetching quiz \'%s\'...', req.params.qid)
 	try {
 		// noinspection JSUnresolvedVariable
 		// noinspection JSUnresolvedVariable
@@ -73,7 +75,7 @@ router.use('/:qid', async (req, res, next) => {
 				{_id: MongoClient.ObjectID(req.params.qid)},
 			],
 		})
-		debug("Fetched: %o", quiz)
+		debug('Fetched: %o', quiz)
 		res.locals.quiz = quiz
 		next()
 	} catch (e) {
@@ -91,7 +93,7 @@ quizRouter.post('/check', (req, res, next) => {
 		normalizeInput(req.body)
 
 		{
-			debug("Checking for orders...")
+			debug('Checking for orders...')
 			const orderedInputIndexesByOrder = Object.entries(req.body.entries)
 				.filter(([i, e]) => e.order)
 				.sort(([ai, a], [bi, b]) => a.order === b.order ? 0 : (a.order > b.order ? 1 : -1))
@@ -101,44 +103,46 @@ quizRouter.post('/check', (req, res, next) => {
 			let maxBlockOrder = 0
 			for (let i = 0; i < orderedInputIndexesByOrder.length; i++) {
 				const eid = orderedInputIndexesByOrder[i]
-				if (!res.locals.quiz.entries[eid].order) continue
+				if (!res.locals.quiz.entries[eid].order) {
+					continue
+				}
 
-				debug("  Checking for eid %d", eid)
+				debug('  Checking for eid %d', eid)
 
 				const currentOrder = res.locals.quiz.entries[eid].order
-				debug("    Reference order: %d", currentOrder)
+				debug('    Reference order: %d', currentOrder)
 				if (i > 0) {
 					const prevEid = orderedInputIndexesByOrder[i - 1]
-					debug("    Previous: %d", prevEid)
+					debug('    Previous: %d', prevEid)
 					if (req.body.entries[eid].order !== req.body.entries[prevEid].order) {
 						if (currentOrder < maxBlockOrder) {
 							fails.push({
 								eid,
 								property: 'order',
-								message: "Not in order",
+								message: 'Not in order',
 							})
 						} else {
 							successes.push({
 								eid,
 								property: 'order',
-								message: "Follows in order",
+								message: 'Follows in order',
 							})
 						}
 						lastBlockOrder = maxBlockOrder
 						maxBlockOrder = currentOrder
 					} else { // e.order === prevE.order
-						debug("    (same block)")
+						debug('    (same block)')
 						if (currentOrder < lastBlockOrder) {
 							fails.push({
 								eid,
 								property: 'order',
-								message: "Before than previous"
+								message: 'Before than previous',
 							})
 						} else {
 							successes.push({
 								eid,
 								property: 'order',
-								message: "May follow in order"
+								message: 'May follow in order',
 							})
 						}
 						maxBlockOrder = Math.max(maxBlockOrder, currentOrder)
@@ -147,7 +151,7 @@ quizRouter.post('/check', (req, res, next) => {
 					successes.push({
 						eid,
 						property: 'order',
-						message: "Starting point"
+						message: 'Starting point',
 					})
 					lastBlockOrder = maxBlockOrder
 					maxBlockOrder = currentOrder
@@ -157,23 +161,25 @@ quizRouter.post('/check', (req, res, next) => {
 		}
 
 		{
-			debug("Checking for answers...")
+			debug('Checking for answers...')
 			for (let eid in req.body.entries) {
 				const property = 'answer'
-				if (req.body.entries[eid][property] === '') continue
-				debug("  Checking for #%d", eid)
+				if (req.body.entries[eid][property] === '') {
+					continue
+				}
+				debug('  Checking for #%d', eid)
 				// noinspection EqualityComparisonWithCoercionJS
 				if (res.locals.quiz.entries[eid][property] != req.body.entries[eid][property]) {
 					fails.push({
 						eid,
 						property,
-						message: "Doesn't match"
+						message: 'Doesn\'t match',
 					})
 				} else {
 					successes.push({
 						eid,
 						property,
-						message: "Does match"
+						message: 'Does match',
 					})
 				}
 			}

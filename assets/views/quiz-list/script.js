@@ -8,10 +8,10 @@ const i18n = new Promise((resolve, reject) => {
 			ns: 'quiz-list',
 			defaultNS: 'quiz-list',
 			backend: {
-				loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json'
+				loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json',
 			},
 			interpolation: {
-				format: (value, format, lng) => Function('return (' + format + ')')()(value, lng)
+				format: (value, format, lng) => Function('return (' + format + ')')()(value, lng),
 			},
 		}, (err, t) => {
 			if (err) {
@@ -51,10 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function translateProperty(selector, property, keys, options = {}) {
 		const elements = document.querySelectorAll(selector)
-		elements.forEach(e => i18n.then(t => {
+		elements.forEach((e) => i18n.then((t) => {
 			e[property] = t(keys, {
 				defaultValue: e[property],
-				...(options instanceof Function ? options(e) : options)
+				...(options instanceof Function ? options(e) : options),
 			})
 			console.debug(`translateProperty(${selector}.${property}, ${keys}, `, options, `) ==`,
 				e[property])
