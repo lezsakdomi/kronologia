@@ -5,6 +5,7 @@
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
       <option name="USE_DOUBLE_QUOTES" value="false" />
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
+      <option name="USE_EXPLICIT_JS_EXTENSION" value="TRUE" />
     </JSCodeStyleSettings>
     <codeStyleSettings language="JavaScript">
       <option name="IF_BRACE_FORCE" value="3" />

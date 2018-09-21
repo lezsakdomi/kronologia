@@ -12,7 +12,7 @@ html
 			shuffleFactor = !{JSON.stringify(config.get("shuffleFactor"))}
 			autoOrdering = !{JSON.stringify(config.get("autoOrdering"))}
 			locale = !{JSON.stringify(config.get("locale"))}
-		script(src='/assets/views/quiz-form/script.js')
+		script(type='module' src='/assets/views/quiz-form/script.js')
 	body
 		unless quiz
 			p#quiznotfound The specified quiz does not exists.

@@ -10,25 +10,21 @@ if (locale === undefined) {
 	locale = 'en'
 }
 
-const i18n = new Promise((resolve, reject) => i18next
-	.use(i18nextXHRBackend)
-	.use(i18nextBrowserLanguageDetector)
-	.init({
-		fallBackLng: locale,
-		debug: true,
-		ns: 'quiz-form',
-		defaultNS: 'quiz-form',
-		backend: {
-			loadPath: '/assets/views/{{ns}}/locales/{{lng}}.json',
-		},
-	}, (err, t) => {
-		if (err) {
-			console.error(err)
-			//return reject(err)
-		}
-		i18n.t = t
-		resolve(t)
-	}))
+import I18n from '../../modules/i18n.js'
+
+const i18n = new I18n('quiz-form', {fallBackLng: locale})
+	.defineContentTranslation('p#quiznotfound', 'messages.notfound')
+	.defineContentTranslation('p#invalidquiz', 'messages.invalid')
+	.defineInputTranslation('title')
+	.defineInputTranslation('question')
+	.defineInputTranslation('answer')
+	.defineInputTranslation('order')
+	.defineButtonTranslation('add')
+	.definePropertyTranslation('input[type="submit"]', 'value', 'buttons.submit',
+		({form: {attributes: {action: {value: a}}}}) => ({context: a, defaultValue: a}))
+	.defineLabelTranslation('showBg')
+	.defineButtonTranslation('sort')
+	.defineButtonTranslation('renumber')
 
 document.addEventListener('DOMContentLoaded', () => prepareDocument(document))
 
@@ -184,7 +180,7 @@ function registerHandlers(document) {
 
 	customClick('form[action="new"] input[type=submit]', () => newQuiz(undefined, true))
 
-	function customClick(selector, handler, required = true) {
+	function customClick(selector, handler) {
 		handleEvent(selector, 'click', function (evt) {
 			try {
 				handler.apply(this, arguments)
@@ -224,76 +220,9 @@ function registerHandlers(document) {
 	}
 }
 
-function localize(document) {
-	translateContents('p#quiznotfound', 'messages.notfound')
-
-	translateContents('p#invalidquiz', 'messages.invalid')
-
-	translateInput('title')
-
-	translateInput('question')
-
-	translateInput('answer')
-
-	translateInput('order')
-
-	translateButton('add')
-
-	translateProperty('input[type="submit"]', 'value', 'buttons.submit',
-		({form: {attributes: {action: {value: a}}}}) => ({context: a, defaultValue: a}))
-
-	translateLabel('showBg')
-
-	translateButton('sort')
-
-	translateButton('renumber')
-
-	function translateContents(selector, keys, options = {}) {
-		return translateProperty(selector, 'innerHTML', keys, options)
-	}
-
-	function translateInput(name, options = {}) {
-		return translateProperty(
-			`input[name="${name}"], input[name$="[${name}]"]`, 'placeholder',
-			[`fields.${name}`, 'fields.generic'],
-			(e) => ({context: e.type, ...(options instanceof Function ? options(e) : options)}))
-	}
-
-	function translateButton(name, options = {}) {
-		return translateContents(
-			`button#${name}`,
-			`buttons.${name}`, options)
-	}
-
-	function translateLabel(name, options = {}) {
-		return translateContents(`label[for="${name}"]`,
-			[`fields.${name}`, 'fields.generic'], (e) => {
-				const myOptions = {}
-				const input = document.querySelector(`input#${name}`)
-				if (input) {
-					myOptions.context = input.type
-				}
-
-				return {...myOptions, ...(options instanceof Function ? options(e) : options)}
-			})
-	}
-
-	function translateProperty(selector, property, keys, options = {}) {
-		const elements = document.querySelectorAll(selector)
-		elements.forEach((e) => i18n.then((t) => {
-			e[property] = t(keys, {
-				defaultValue: e[property],
-				...(options instanceof Function ? options(e) : options),
-			})
-			console.debug(`translateProperty(${selector}.${property}, ${keys}, `, options, `) ==`,
-				e[property])
-		}))
-	}
-}
-
 function prepareDocument(document) {
 	registerHandlers(document)
-	localize(document)
+	i18n.bindLoadedDocument(document)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -747,20 +676,11 @@ function postData(url, data, handleFail = false) {
 
 	if (handleFail) {
 		promise.catch((e) => {
-			i18nAlert('messages.postfail', 'Failed to post data', {context: url, error: e})
+			i18n.alert('messages.postfail', 'Failed to post data', {context: url, error: e})
 		})
 	}
 
 	return promise
-}
-
-function i18nAlert(key, message = 'Something happened', options = {}) {
-	i18n.then((t) => {
-		const translatedMessage = t(key, {defaultValue: message, ...options})
-		alert(translatedMessage)
-	}, () => {
-		alert(message)
-	})
 }
 
 function allowPageLeave() {
