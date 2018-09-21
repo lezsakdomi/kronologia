@@ -5,7 +5,8 @@
   "links": {
     "auth": "Bejelentkezés",
     "quizzes": "Kvízek listázása",
-    "wiki": "A program leírása"
+    "wiki": "A program leírása",
+    "about": "A programról"
   },
   "lngInstruction": "Elérhető nyelvek:",
   "lng_dev": "fejlesztői"

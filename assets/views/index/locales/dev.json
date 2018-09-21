@@ -6,7 +6,8 @@
   "links": {
     "auth": "Authenticate",
     "quizzes": "List quizzes",
-    "wiki": "Application documentation"
+    "wiki": "Application documentation",
+    "about": "About"
   },
   "lngInstruction": "Available languages:",
   "lng": "{{context, (lng) => lng.toUpperCase()}}",
