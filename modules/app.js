@@ -12,6 +12,7 @@ const app = express()
 module.exports = app
 
 app.locals.config = config
+app.locals.env = process.env
 app.locals.randomColor = require('randomcolor')
 app.set('view engine', 'pug')
 app.set('views', 'assets/views')
