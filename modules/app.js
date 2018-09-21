@@ -12,6 +12,7 @@ const app = express()
 module.exports = app
 
 app.locals.config = config
+app.locals.env = process.env
 app.locals.randomColor = require('randomcolor')
 app.set('view engine', 'pug')
 app.set('views', 'assets/views')
@@ -45,3 +46,5 @@ app.use('/quizzes', require('./quizzes-router'))
 app.get('/', (req, res) => res.status(307).redirect('/index.html'))
 // noinspection JSUnresolvedFunction
 app.get('/index.html', (req, res) => res.render('index/template'))
+// noinspection JSUnresolvedFunction
+app.get('/about/index.html', (req, res) => res.render('about/template'))

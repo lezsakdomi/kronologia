@@ -1,0 +1,33 @@
+{
+  "title": "About Kronologia",
+  "header": "About",
+  "purpose": {
+    "title": "Purpose",
+    "text": "<p>A quiz program for dates</p><p>Originally developed at the Békásmegyeri Veres Péter Gimnázium (a high school in Hungary) by some students for internal usage, but this program can be used in general too.</p>"
+  },
+  "documentation": {
+    "title": "Documentation",
+    "text": "A terse description about installing, accessing and using the program can be found in <a href=\"https://github.com/lezsakdomi/kronologia/wiki\">the wiki</a> at <a href=\"https://github.com/lezsakdomi/kronologia\">the GitHub repo</a>."
+  },
+  "contributors": {
+    "title": "Contributors",
+    "text": "Currently we do not maintain a static list of contributors. For an accurate list refer to <a href=\"https://github.com/lezsakdomi/kronologia/graphs/contributors\">the corresponding GitHub insights page</a>, which generates an infographic based on <a href=\"https://github.com/lezsakdomi/kronologia/commits\">every change anyone made</a>."
+  },
+  "currentVersion": {
+    "title": "Version information",
+    "errorMessage": "Simple version information is not available for this deployment"
+  },
+  "envVars": {
+    "label": "{{context, (name) => name[7].toUpperCase() + name.slice(8).replace(/_/g, ' ').toLowerCase()}}",
+    "label_HEROKU_APP_ID": "Internal app identifier",
+    "label_HEROKU_APP_NAME": "App name",
+    "label_HEROKU_DYNO_ID": "Internal server (<i>dyno</i>) identifier",
+    "label_HEROKU_RELEASE_CREATED_AT": "Last updated",
+    "label_HEROKU_RELEASE_VERSION": "Iteration",
+    "label_HEROKU_SLUG_COMMIT": "Version ID",
+    "label_HEROKU_SLUG_DESCRIPTION": "Deployment"
+  },
+  "buttons": {
+    "changeLog": "View changelog"
+  }
+}
