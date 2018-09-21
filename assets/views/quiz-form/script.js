@@ -80,7 +80,7 @@ function registerHandlers(document) {
 		reorderStart()
 		findPositionAndPlace(tr)
 		reorderEnd()
-	}, true)
+	})
 
 	Object.entries({
 		'.down': generateCleverPushFunction(1),
@@ -95,10 +95,10 @@ function registerHandlers(document) {
 			dOrder(tr)
 			findPositionAndPlace(tr)
 			reorderEnd()
-		}, true)
+		})
 	})
 
-	customClick('form[action="check"] input[type=submit]', () => checkForm(true), false)
+	customClick('form[action="check"] input[type=submit]', () => checkForm(true))
 
 	handleEvent('#showBg', 'change', ({target: checkbox}) => {
 		const tbody = document.querySelector('tbody')
@@ -108,7 +108,7 @@ function registerHandlers(document) {
 		} else {
 			tbody.classList.remove('show-bg')
 		}
-	}, false, true)
+	}, true)
 
 	customClick('button#add', () => {
 		const tbody = document.querySelector('tbody')
@@ -136,7 +136,7 @@ function registerHandlers(document) {
 	</tr>`)
 		prepareDocument(tbody.lastChild)
 		document.querySelector('input[name="entries[' + eid + '][question]"]').focus()
-	}, false)
+	})
 
 	customClick('#sort', () => {
 		const tbody = document.querySelector('tbody')
@@ -154,7 +154,7 @@ function registerHandlers(document) {
 		trs.forEach((tr) => tbody.removeChild(tr))
 		trs.forEach((tr) => tbody.appendChild(tr))
 		reorderEnd()
-	}, false)
+	})
 
 	customClick('#renumber', () => {
 		const data = gatherData()
@@ -167,7 +167,7 @@ function registerHandlers(document) {
 		}
 
 		updateData(data, true)
-	}, false)
+	})
 
 	customClick('form[action="update"] input[type=submit]', () => updateData(), false)
 
@@ -187,22 +187,12 @@ function registerHandlers(document) {
 			} finally {
 				evt.preventDefault()
 			}
-		}, required)
+		})
 	}
 
-	function handleEvent(selector, event, handler, required = true, fireNow = false) {
+	function handleEvent(selector, event, handler, fireNow = false) {
 		const elements = document.querySelectorAll(selector)
 		elements.forEach((e) => e.addEventListener(event, handler))
-
-		if (elements.length === 0) {
-			if (required) {
-				console.warn('Could not find ' + selector)
-			} else {
-				console.info(selector + ' not present')
-			}
-		} else {
-			console.debug('Handler registered for ' + selector, elements, handler)
-		}
 
 		if (fireNow) {
 			elements.forEach((element) => {
@@ -215,7 +205,6 @@ function registerHandlers(document) {
 					console.error(e)
 				}
 			})
-			console.debug('Mock event for ' + selector + ' dispatched', elements, handler)
 		}
 	}
 }
