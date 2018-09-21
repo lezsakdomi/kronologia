@@ -1,30 +1,31 @@
 html
     head
         title About
+        script(type='module' src='/assets/views/about/script.js')
     body
         h1 About
 
-        h2 Purpose
+        h2#purposeH Purpose
         p#purpose
 
-        h2 Documentation
+        h2#documentationH Documentation
         p#documentation: a(href='https://github.com/lezsakdomi/kronologia/wiki') on GitHub Wiki
 
-        h2 Contributors
+        h2#contributorsH Contributors
         p#contributors.
             Seriously, check the committers <a href="https://github.com/lezsakdomi/kronologia/graphs/contributors">
             on GitHub</a>.
 
-        h2 Current version
+        h2#currentVersionH Current version
         if env && env.HEROKU_APP_ID
-            table
+            table#currentVersion
                 each value, name in env
                     if name.startsWith('HEROKU_')
-                        tr
-                            td(valign='center')
+                        tr.envVar(var-name=name)
+                            td.envVarName(valign='center')
                                 - const name_ = name.slice('HEROKU_'.length).replace(/_/g, ' ').toLowerCase()
                                 span= name_[0].toUpperCase() + name_.slice(1)
-                            td(valign='center')
+                            td.envVarValue(valign='center')
                                 case name
                                     when 'HEROKU_APP_ID'
                                         a(href='https://dashboard.heroku.com/apps/' + value): code= value
@@ -39,10 +40,10 @@ html
                                     when 'HEROKU_SLUG_COMMIT'
                                         a(href='https://github.com/search?type=Commits&q=hash%3A' + value): b: code= value.slice(0, 7)
                                         | &nbsp;
-                                        a(href='https://github.com/lezsakdomi/kronologia/commits/' + value) [changelog in main repo]
+                                        a(href='https://github.com/lezsakdomi/kronologia/commits/' + value): button.changeLog changelog
                                     when 'HEROKU_SLUG_DESCRIPTION'
                                         span= value
                                     default
                                         code= value
         else
-            p#cantdetectcurrentversion Could not detect identifier for current version
+            p#cantDetectCurrentVersion Could not detect identifier for current version
