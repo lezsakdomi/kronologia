@@ -414,7 +414,7 @@ function reorderStart(trs = document.querySelectorAll('tr')) {
 	if (trs instanceof HTMLElement) {
 		trs = arguments
 	}
-	for (tr of trs) {
+	for (let tr of trs) {
 		tr.style.transition = 'none'
 		tr.lastOffsetTop = tr.offsetTop
 	}
