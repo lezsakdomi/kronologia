@@ -1,0 +1,32 @@
+{
+  "title": "Névjegy | Kronologia",
+  "header": "Névjegy",
+  "purpose": {
+    "title": "Cél",
+    "text": "<p>Egy kvíz program dátumokhoz</p><p>Eredetileg a Békásmegyeri Veres Péter Gimnáziumban belső használatra készült, azonban ez az alkalmazás használható bármely környezetben, ahol hasonló adatokat kell gyakorolni mint történelemórákon.</p>"
+  },
+  "documentation": {
+    "title": "Dokumentáció",
+    "text": "Egy hosszas leírás elérhető <a href=\"https://github.com/lezsakdomi/kronologia\">a GitHub repo</a> <a href=\"https://github.com/lezsakdomi/kronologia/wiki\">wikijén</a>, amelyből részletesen megtudhatóak a telepítés, az elérés és a használat lépései/lehetőségei."
+  },
+  "contributors": {
+    "title": "Közreműködők",
+    "text": "Jelenleg nem vezetünk statikus listát a program készítőiről. Egy pontos lista elérhető <a href=\"https://github.com/lezsakdomi/kronologia/graphs/contributors\">a megfelelő GitHub insights oldalon</a>, ahol egy szép infografikában tárulkozik elénk, hogy ki mekkora részt vett ki <a href=\"https://github.com/lezsakdomi/kronologia/commits\">a program elkészítéséből</a>."
+  },
+  "currentVersion": {
+    "title": "Verzió",
+    "errorMessage": "A verziót itt nem lehet egyszerűen meghatározni. Kérjük, további információkért érdeklődjön a rendszergazdánál, hogy ezt honnan és milyen módon installálta."
+  },
+  "envVars": {
+    "label_HEROKU_APP_ID": "Belső alkalmazás azonosító",
+    "label_HEROKU_APP_NAME": "Alkalmazás neve",
+    "label_HEROKU_DYNO_ID": "Belső szerver (<i>dyno</i>) azonosító",
+    "label_HEROKU_RELEASE_CREATED_AT": "Utoljára frissítve",
+    "label_HEROKU_RELEASE_VERSION": "Sorszám",
+    "label_HEROKU_SLUG_COMMIT": "Verzió ID",
+    "label_HEROKU_SLUG_DESCRIPTION": "Telepítés"
+  },
+  "buttons": {
+    "changeLog": "Változatásjegyzék megtekintése"
+  }
+}
