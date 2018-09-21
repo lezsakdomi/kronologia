@@ -132,6 +132,14 @@ export default class I18n {
 		return this
 	}
 
+	translateInstantly(key, defaultValue, options = {}) {
+		if (this.t) {
+			return this.t(key, {defaultValue, ...options})
+		} else {
+			return defaultValue
+		}
+	}
+
 	alert(key, message = 'Something happened', options = {}) {
 		return i18n.then((t) => {
 			const translatedMessage = t(key, {defaultValue: message, ...options})

@@ -34,11 +34,7 @@ window.onbeforeunload = () => {
 	} // No initialization yet
 
 	if (JSON.stringify(gatherData()) !== JSON.stringify(window.remoteData)) {
-		let msg = 'Nothing were saved. Are you sure?'
-		if (i18n.t) {
-			msg = i18n.t('messages.notsaved', {defaultValue: msg})
-		}
-		return msg
+		return i18n.translateInstantly('messages.notsaved', 'Nothing were saved. Are you sure?')
 	}
 }
 
