@@ -19,7 +19,14 @@ app.set('views', 'assets/views')
 app.use(logger('dev'))
 // noinspection JSUnresolvedFunction
 app.use('/assets', stylus.middleware('assets'))
-app.use('/assets', express.static('assets'))
+app.use('/assets', express.static('assets', {
+	dotfiles: 'deny',
+	etag: true,
+	fallthrough: false,
+	immutable: app.get('env') === 'production',
+	index: false,
+	maxAge: (app.get('env') === 'production') ? '1h' : 0,
+}))
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
