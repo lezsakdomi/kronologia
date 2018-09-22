@@ -63,7 +63,7 @@ router.post('/new', async (req, res, next) => {
 const quizRouter = express.Router({})
 
 // noinspection JSUnresolvedFunction
-router.use('/:qid', async (req, res, next) => {
+router.use('/:qid([0-fA-F]{24}|[\0-\255]{12})', async (req, res, next) => {
 	// noinspection JSUnresolvedVariable
 	debug('Fetching quiz \'%s\'...', req.params.qid)
 	try {
