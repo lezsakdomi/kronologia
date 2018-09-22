@@ -107,8 +107,7 @@ router.use('/:authStrategy', //TODO POST (or get)
 		})
 		authenticator(...arguments)
 	},
-	//(req, res) => res.redirect('/users/' + req.user.username))
-	(req, res) => res.json(req.user)) //TODO
+	(req, res) => res.redirect('/'))
 
 // noinspection JSUnresolvedFunction
 router.get('/', (req, res) => res.json(req.user)) //TODO remove
