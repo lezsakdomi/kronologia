@@ -71,6 +71,7 @@ for (let provider in config.get('auth')) {
 		passport.deserializeUser(async (serialized, done) => {
 			try {
 				const user = await collection.findOne({_id: serialized})
+				user.globalId = user.provider + ':' + user.id
 				done(null, user)
 			} catch (e) {
 				done(e)

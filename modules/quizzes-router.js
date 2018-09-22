@@ -1,5 +1,6 @@
 const express = require('express')
 const MongoClient = require('mongodb')
+const createError = require('http-errors')
 const mongo = require('./mongo')
 const debug = require('debug')('kronologia:backend:quizRouter')
 
@@ -23,7 +24,15 @@ router.use(async (req, res, next) => {
 // noinspection JSUnresolvedFunction
 router.get(['/', '/index.html'], async (req, res, next) => {
 	try {
-		res.locals.quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1}).toArray()
+		const query = {}
+
+		if (req.user) {
+			query.userId = req.user.globalId
+		} else {
+			query.userId = {$exists: false}
+		}
+
+		res.locals.quizzes = await req.db.collection('quizzes').find(query, {_id: 1, title: 1}).toArray()
 		next()
 	} catch (e) {
 		next(e)
@@ -214,6 +223,10 @@ quizRouter.get('/form.html', (req, res) => {
 quizRouter.post('/update', async (req, res, next) => {
 	try {
 		const document = req.body
+
+		if ((req.user && req.user.globalId) !== res.locals.quiz.userId) {
+			next(createError(403))
+		}
 
 		normalizeInput(document)
 
