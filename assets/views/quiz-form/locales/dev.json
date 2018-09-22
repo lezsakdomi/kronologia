@@ -20,6 +20,7 @@
     "submit_new": "✔ Create",
     "submit_check": "☑ Check",
     "submit_update": "⇫ Update",
+    "submit_delete": "⚠ Completely remove from the server ⚠",
     "sort": "⥯ Sort by answers",
     "renumber": "＃ Renumber"
   }

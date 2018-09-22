@@ -13,4 +13,6 @@ html
 					a(href=quiz._id + '/form.html')= quiz.title
 					| &nbsp;
 					button.edit(formaction=quiz._id + '/edit.html') edit
+					| &nbsp;
+					button.delete(formaction=quiz._id + '/delete.html') delete
 		a(href='new.html'): button#add +

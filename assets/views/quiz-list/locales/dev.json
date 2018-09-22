@@ -3,6 +3,7 @@
   "heading": "Quizzes",
   "buttons": {
     "add": "+ New quiz",
-    "edit": "✎ Edit"
+    "edit": "✎ Edit",
+    "delete": "🗑 Delete"
   }
 }

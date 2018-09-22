@@ -244,6 +244,24 @@ quizRouter.get('/edit.html', (req, res) => {
 	return res.render('quiz-form/template', {action: 'update', editable: true})
 })
 
+quizRouter.post('/delete', async (req, res, next) => {
+	try {
+		if ((req.user && req.user.globalId) !== res.locals.quiz.userId) {
+			next(createError(403))
+		}
+
+		const response = await req.db.collection('quizzes').deleteOne({_id: res.locals.quiz._id})
+		res.json(response)
+	} catch (e) {
+		next(e)
+	}
+})
+
+// noinspection JSUnresolvedFunction
+quizRouter.get('/delete.html', (req, res) => {
+	res.render('quiz-form/template', {action: 'delete', editable: true})
+})
+
 function normalizeInput(quiz) {
 	for (eid in quiz.entries) {
 		quiz.entries[eid].order = parseInt(quiz.entries[eid].order)
