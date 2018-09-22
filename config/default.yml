@@ -7,6 +7,9 @@ locale: en
 mongo:
   url: mongodb://localhost:27017
   options: false
+quizCategories:
+  openByDefault: false
+  separator: ' / '
 secret: 'keyboard cat' #TODO generate automatically
 secure: false #TODO
 session:

@@ -1,18 +1,34 @@
+mixin recursive-list(quizzes, separator, prefix)
+    - console.log('RECURSIVE', separator, prefix)
+    - const previousPrefix = prefix
+    - const processedPrefixes = []
+    ul(data-separator=separator data-prefix=prefix)
+        for quiz in quizzes.filter((quiz) => quiz.title.startsWith(prefix))
+            - const strippedTitle = quiz.title.slice(prefix.length)
+            if strippedTitle.includes(separator)
+                - const newPrefix = strippedTitle.slice(0, strippedTitle.indexOf(separator))
+                unless processedPrefixes.includes(prefix + separator + newPrefix)
+                    - processedPrefixes.push(prefix + separator + newPrefix)
+                    details(open=config.quizCategories.openByDefault)
+                        summary= newPrefix
+                        +recursive-list(quizzes, separator, prefix + newPrefix + separator)
+            else
+                li: form
+                    a(href=quiz._id + '/form.html')= strippedTitle
+                    | &nbsp;
+                    button.edit(formaction=quiz._id + '/edit.html') edit
+                    | &nbsp;
+                    button.delete(formaction=quiz._id + '/delete.html') delete
+
 html
-	head
-		title Quiz list
-		script(src="https://cdnjs.cloudflare.com/ajax/libs/i18next/11.9.0/i18next.min.js")
-		script(src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@1.5.1/i18nextXHRBackend.min.js")
-		script(src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@2.2.3/i18nextBrowserLanguageDetector.min.js")
-		script(type='module' src="/assets/views/quiz-list/script.js")
-	body
-		h1 Quizzes
-		ul
-			for quiz in quizzes
-				li: form
-					a(href=quiz._id + '/form.html')= quiz.title
-					| &nbsp;
-					button.edit(formaction=quiz._id + '/edit.html') edit
-					| &nbsp;
-					button.delete(formaction=quiz._id + '/delete.html') delete
-		a(href='new.html'): button#add +
+    head
+        title Quiz list
+        link(rel='stylesheet' href='/assets/views/quiz-list/style.css')
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/i18next/11.9.0/i18next.min.js")
+        script(src="https://cdn.jsdelivr.net/npm/i18next-xhr-backend@1.5.1/i18nextXHRBackend.min.js")
+        script(src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@2.2.3/i18nextBrowserLanguageDetector.min.js")
+        script(type='module' src="/assets/views/quiz-list/script.js")
+    body
+        h1 Quizzes
+        +recursive-list(quizzes, config.quizCategories.separator, '')
+        a(href='new.html'): button#add +
