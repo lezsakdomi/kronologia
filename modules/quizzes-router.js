@@ -21,25 +21,20 @@ router.use(async (req, res, next) => {
 })
 
 // noinspection JSUnresolvedFunction
-router.get('/', async (req, res, next) => {
+router.get(['/', '/index.html'], async (req, res, next) => {
 	try {
-		const quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1}).toArray()
-		res.json(quizzes)
+		res.locals.quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1}).toArray()
+		next()
 	} catch (e) {
 		next(e)
 	}
 })
 
 // noinspection JSUnresolvedFunction
-router.get('/index.html', async (req, res, next) => {
-	try {
-		res.locals.quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1})
-			.toArray()
-		res.render('quiz-list/template')
-	} catch (e) {
-		next(e)
-	}
-})
+router.get('/', (req, res) => res.json(res.locals.quizzes))
+
+// noinspection JSUnresolvedFunction
+router.get('/index.html', (req, res) => res.render('quiz-list/template'))
 
 //noinspection JSUnresolvedFunction
 router.get('/new.html', (req, res) => {
