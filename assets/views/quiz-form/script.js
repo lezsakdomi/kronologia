@@ -167,12 +167,12 @@ function registerHandlers(document) {
 
 	customClick('form[action="update"] input[type=submit]', () => updateData(), false)
 
-	handleEvent('*', 'change', () => {
+	handleEvent('input', 'change', () => {
 		if (!window.reorderInProgress) {
-			fs(checkForm())
+			autoCheck()
 		}
 	})
-	fs(() => checkForm())
+	autoCheck()
 
 	customClick('form[action="new"] input[type=submit]', () => newQuiz(undefined, true))
 
@@ -272,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						.map((input) => parseInt(input.value || 0))
 						.reduce((a, v) => Math.max(a, v), 0)
 					+ 1
+				autoCheck()
 			} else if (tr.previousElementSibling === null || tr.previousElementSibling
 				.querySelector('input[name$="[order]"]').value === '') {
 				if (tr.nextElementSibling && tr.nextElementSibling
@@ -284,6 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
 						.forEach((orderInput) => orderInput.value -= shift)
 
 					orderInput.value = 1
+
+					autoCheck()
 				}
 			} else if (insertBefore) {
 				orderInput.value = insertBefore.querySelector('input[name$="[order]"]').value
@@ -420,7 +423,7 @@ function reorderStart(trs = document.querySelectorAll('tr')) {
 
 function reorderEnd(trs = document.querySelectorAll('tr')) {
 	window.reorderInPorgress = false
-	fs(checkForm())
+	autoCheck()
 	if (trs instanceof HTMLElement) {
 		trs = arguments
 	}
@@ -510,6 +513,12 @@ function deleteQuiz(handleResult = false) {
 	}
 
 	return promise
+}
+
+function autoCheck() {
+	if (document.querySelector('form').getAttribute('action') === 'check') {
+		fs(() => checkForm())
+	}
 }
 
 function checkForm(force = false) {

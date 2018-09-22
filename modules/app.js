@@ -25,7 +25,7 @@ app.use('/assets', express.static('assets', {
 	fallthrough: false,
 	immutable: app.get('env') === 'production',
 	index: false,
-	maxAge: '1h',
+	maxAge: (app.get('env') === 'production') ? '1h' : 0,
 }))
 app.use(cookieParser())
 app.use(express.json())
