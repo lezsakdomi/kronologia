@@ -8,5 +8,6 @@
   "providerOption": "Bejelentkezés {{context, (c) => c[0].toUpperCase() + c.slice(1)}} használatával",
   "providerOption_google": "Bejelentkezés Google-fiókkal",
   "providerOption_twitter": "Bejelentkezés Twitterrel",
-  "providerOption_facebook": "Bejelentkezés Facebookkal"
+  "providerOption_facebook": "Bejelentkezés Facebookkal",
+  "logout": "👤 Átváltás vendég módba"
 }

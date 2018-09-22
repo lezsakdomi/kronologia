@@ -24,6 +24,12 @@ html
 					input(name='title' value=quiz.title placeholder="Title")
 				else
 					h1= quiz.title
+
+				if quiz.userId
+					input(type='hidden' name='userId' value=quiz.userId)
+				else if user
+					input(type='hidden' name='userId' value=user.globalId)
+
 				table
 					tbody
 						if quiz.entries

@@ -3,6 +3,7 @@
   "heading": "Kvízek",
   "buttons": {
     "add": "+ Új kvíz létrehozása",
-    "edit": "✎ Szerkesztés"
+    "edit": "✎ Szerkesztés",
+    "delete": "🗑 Törlés"
   }
 }

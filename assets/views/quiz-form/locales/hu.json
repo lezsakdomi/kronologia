@@ -20,6 +20,7 @@
     "submit_new": "✔ Létrehozás",
     "submit_check": "☑ Ellenőrzés",
     "submit_update": "⇫ Frissítés",
+    "submit_delete": "⚠ Végleges törlés a szerverről ⚠",
     "sort": "⥯ Rendezés válaszok szerint",
     "renumber": "＃ Újraszámozás"
   }

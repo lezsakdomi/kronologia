@@ -1,5 +1,6 @@
 const express = require('express')
 const MongoClient = require('mongodb')
+const createError = require('http-errors')
 const mongo = require('./mongo')
 const debug = require('debug')('kronologia:backend:quizRouter')
 
@@ -21,25 +22,28 @@ router.use(async (req, res, next) => {
 })
 
 // noinspection JSUnresolvedFunction
-router.get('/', async (req, res, next) => {
+router.get(['/', '/index.html'], async (req, res, next) => {
 	try {
-		const quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1}).toArray()
-		res.json(quizzes)
+		const query = {}
+
+		if (req.user) {
+			query.userId = req.user.globalId
+		} else {
+			query.userId = {$exists: false}
+		}
+
+		res.locals.quizzes = await req.db.collection('quizzes').find(query, {_id: 1, title: 1}).toArray()
+		next()
 	} catch (e) {
 		next(e)
 	}
 })
 
 // noinspection JSUnresolvedFunction
-router.get('/index.html', async (req, res, next) => {
-	try {
-		res.locals.quizzes = await req.db.collection('quizzes').find({}, {_id: 1, title: 1})
-			.toArray()
-		res.render('quiz-list/template')
-	} catch (e) {
-		next(e)
-	}
-})
+router.get('/', (req, res) => res.json(res.locals.quizzes))
+
+// noinspection JSUnresolvedFunction
+router.get('/index.html', (req, res) => res.render('quiz-list/template'))
 
 //noinspection JSUnresolvedFunction
 router.get('/new.html', (req, res) => {
@@ -220,6 +224,10 @@ quizRouter.post('/update', async (req, res, next) => {
 	try {
 		const document = req.body
 
+		if ((req.user && req.user.globalId) !== res.locals.quiz.userId) {
+			next(createError(403))
+		}
+
 		normalizeInput(document)
 
 		document._id = res.locals.quiz._id
@@ -234,6 +242,24 @@ quizRouter.post('/update', async (req, res, next) => {
 // noinspection JSUnresolvedFunction
 quizRouter.get('/edit.html', (req, res) => {
 	return res.render('quiz-form/template', {action: 'update', editable: true})
+})
+
+quizRouter.post('/delete', async (req, res, next) => {
+	try {
+		if ((req.user && req.user.globalId) !== res.locals.quiz.userId) {
+			next(createError(403))
+		}
+
+		const response = await req.db.collection('quizzes').deleteOne({_id: res.locals.quiz._id})
+		res.json(response)
+	} catch (e) {
+		next(e)
+	}
+})
+
+// noinspection JSUnresolvedFunction
+quizRouter.get('/delete.html', (req, res) => {
+	res.render('quiz-form/template', {action: 'delete', editable: true})
 })
 
 function normalizeInput(quiz) {

@@ -8,5 +8,6 @@
   "providerOption": "Log in using {{context, (c) => c[0].toUpperCase() + c.slice(1)}}",
   "providerOption_google": "Authenticate using your Google account",
   "providerOption_twitter": "Authenticate using Twitter",
-  "providerOption_facebook": "Log in with Facebook"
+  "providerOption_facebook": "Log in with Facebook",
+  "logout": "👤 Switch back to guest session"
 }

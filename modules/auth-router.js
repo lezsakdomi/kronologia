@@ -71,6 +71,7 @@ for (let provider in config.get('auth')) {
 		passport.deserializeUser(async (serialized, done) => {
 			try {
 				const user = await collection.findOne({_id: serialized})
+				user.globalId = user.provider + ':' + user.id
 				done(null, user)
 			} catch (e) {
 				done(e)
@@ -91,6 +92,11 @@ for (let provider in config.get('auth')) {
 router.get('/index.html',
 	(req, res) => res.render('auth-list/template', {user: req.user, validProviders}))
 
+router.use('/logout', (req, res) => {
+	req.logout()
+	res.redirect('/')
+})
+
 // noinspection JSUnresolvedFunction
 router.use('/:authStrategy', //TODO POST (or get)
 	function ({params: {authStrategy: strategy}}, undefined, next) {
@@ -107,8 +113,7 @@ router.use('/:authStrategy', //TODO POST (or get)
 		})
 		authenticator(...arguments)
 	},
-	//(req, res) => res.redirect('/users/' + req.user.username))
-	(req, res) => res.json(req.user)) //TODO
+	(req, res) => res.redirect('/'))
 
 // noinspection JSUnresolvedFunction
 router.get('/', (req, res) => res.json(req.user)) //TODO remove

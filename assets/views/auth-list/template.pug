@@ -21,4 +21,5 @@ html
 		p#instruction The following authentication providers are available:
 		ul
 			for provider in validProviders
-				li#provider: a(href=provider)= provider[0].toUpperCase() + provider.slice(1)
+				li.provider: a(href=provider)= provider[0].toUpperCase() + provider.slice(1)
+			li#logout: a(href='logout') Log out

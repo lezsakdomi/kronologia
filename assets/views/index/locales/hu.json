@@ -4,10 +4,12 @@
   "instruction": "Lehetőségek:",
   "links": {
     "auth": "Bejelentkezés",
+    "auth_again": "Felhasználóváltás",
     "quizzes": "Kvízek listázása",
     "wiki": "A program leírása",
     "about": "A programról"
   },
+  "loggedIn": "Jelenleg bejelentkezve {{context, (provider) => provider[0].toUpperCase() + provider.slice(1)}}-fiókkal",
   "lngInstruction": "Elérhető nyelvek:",
   "lng_dev": "fejlesztői"
 }

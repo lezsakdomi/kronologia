@@ -176,6 +176,8 @@ function registerHandlers(document) {
 
 	customClick('form[action="new"] input[type=submit]', () => newQuiz(undefined, true))
 
+	customClick('form[action="delete"] input[type=submit]', () => deleteQuiz(true))
+
 	function customClick(selector, handler) {
 		handleEvent(selector, 'click', function (evt) {
 			try {
@@ -494,6 +496,19 @@ function newQuiz(data = gatherData(), handleResult = false) {
 		promise.then(() => {
 			allowPageLeave()
 			return window.location = 'index.html'
+		})
+	}
+
+	return promise
+}
+
+function deleteQuiz(handleResult = false) {
+	const promise = postData('delete', {}, handleResult)
+
+	if (handleResult) {
+		promise.then(() => {
+			allowPageLeave()
+			return window.location = '../index.html'
 		})
 	}
 

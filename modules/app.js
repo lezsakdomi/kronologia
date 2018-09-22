@@ -45,6 +45,11 @@ if (config.get('session')) {
 	app.use(passport.initialize())
 	// noinspection JSUnresolvedFunction
 	app.use(passport.session())
+	// noinspection JSUnresolvedFunction
+	app.use((req, res, next) => {
+		res.locals.user = req.user
+		next()
+	})
 }
 
 app.use('/auth', require('./auth-router'))
