@@ -9,7 +9,12 @@ html
         h1 Kronologia
         p#instruction Things to do:
         ul
-            li: a#auth(href='/auth/index.html') Log in
+            li
+                a#auth(href='/auth/index.html' needed=!user) Log in
+                if (user)
+                    | &nbsp;(
+                    span#loggedIn(provider=user.provider)= `logged in using ${user.provider[0].toUpperCase() + user.provider.slice(1)}`
+                    | )
             li: a#quizzes(href='/quizzes/index.html') List quizzes
             li: a#wiki(href='https://github.com/lezsakdomi/kronologia/wiki') Wiki
             li

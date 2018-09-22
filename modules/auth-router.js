@@ -91,6 +91,11 @@ for (let provider in config.get('auth')) {
 router.get('/index.html',
 	(req, res) => res.render('auth-list/template', {user: req.user, validProviders}))
 
+router.use('/logout', (req, res) => {
+	req.logout()
+	res.redirect('/')
+})
+
 // noinspection JSUnresolvedFunction
 router.use('/:authStrategy', //TODO POST (or get)
 	function ({params: {authStrategy: strategy}}, undefined, next) {
