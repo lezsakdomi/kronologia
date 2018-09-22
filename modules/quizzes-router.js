@@ -222,6 +222,8 @@ quizRouter.post('/update', async (req, res, next) => {
 
 		normalizeInput(document)
 
+		document._id = res.locals.quiz._id
+
 		const response = await req.db.collection('quizzes').replaceOne(res.locals.quiz, document)
 		res.json(response)
 	} catch (e) {
@@ -237,5 +239,9 @@ quizRouter.get('/edit.html', (req, res) => {
 function normalizeInput(quiz) {
 	for (eid in quiz.entries) {
 		quiz.entries[eid].order = parseInt(quiz.entries[eid].order)
+	}
+
+	if (quiz._id) {
+		quiz._id = MongoClient.ObjectID(quiz._id)
 	}
 }
