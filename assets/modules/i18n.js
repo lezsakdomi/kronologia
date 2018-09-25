@@ -1,6 +1,6 @@
-import i18next from 'https://unpkg.com/i18next@11.9.0/dist/es'
-import i18nextXHRBackend from 'https://unpkg.com/i18next-xhr-backend@1.5.1/dist/es'
-import i18nextBrowserLanguageDetector from 'https://unpkg.com/i18next-browser-languagedetector@2.2.3/dist/es'
+import i18next from 'https://unpkg.com/i18next@11.9.0/dist/es/index.js'
+import i18nextXHRBackend from 'https://unpkg.com/i18next-xhr-backend@1.5.1/dist/es/index.js'
+import i18nextBrowserLanguageDetector from 'https://unpkg.com/i18next-browser-languagedetector@2.2.3/dist/es/index.js'
 
 export default class I18n {
 	constructor(namespace, options = {}) {
