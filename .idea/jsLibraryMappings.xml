@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{i18next, i18nextBrowserLanguageDetector, i18nextXHRBackend, randomColor}" />
+    <file url="PROJECT" libraries="{i18next, i18nextBrowserLanguageDetector, i18nextXHRBackend, randomColor, system@0.19}" />
     <includedPredefinedLibrary name="Node.js Core" />
   </component>
 </project>

@@ -1,0 +1,37 @@
+script(nomodule src="//cdn.polyfill.io/v2/polyfill.min.js?flags=gated")
+script(nomodule src="//jspm.io/system@0.19.js")
+script(nomodule).
+	System.config({
+		baseURL: '//npm.jspm.io/',
+		map: {
+			'plugin-babel': '//unpkg.com/systemjs-plugin-babel@0/plugin-babel.js',
+			'systemjs-babel-build': '//unpkg.com/systemjs-plugin-babel@0/systemjs-babel-browser.js'
+		},
+		transpiler: 'plugin-babel',
+		babelOptions: {
+			sourceMaps: false
+		}
+	});
+
+	(function () {
+		var ran = false;
+
+		window.addEventListener('load', function () {
+			if (ran) return;
+			else ran = true;
+
+			var promises = [];
+
+			document.querySelectorAll('script[type="module"]').forEach(function (script) {
+				console.log("Importing", script, "...");
+				promises.push(System.import(script.src));
+			});
+
+			Promise.all(promises)
+				.catch(console.error)
+				.then(function () {
+					console.log("All imports are done");
+					document.dispatchEvent(new Event('DOMContentLoaded'));
+				});
+		});
+	})()

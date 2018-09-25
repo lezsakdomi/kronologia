@@ -8,5 +8,6 @@
     <orderEntry type="library" name="i18next" level="application" />
     <orderEntry type="library" name="i18nextXHRBackend" level="application" />
     <orderEntry type="library" name="i18nextBrowserLanguageDetector" level="application" />
+    <orderEntry type="library" name="system@0.19" level="application" />
   </component>
 </module>
