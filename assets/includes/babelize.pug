@@ -1,5 +1,8 @@
-script(nomodule src="//cdn.polyfill.io/v2/polyfill.min.js?flags=gated")
+script(nomodule src="//cdn.polyfill.io/v2/polyfill.min.js?flags=gated&unknown=polyfill&features=default-3.6,Object.entries")
 script(nomodule src="//jspm.io/system@0.19.js")
+script(nomodule).
+	NodeList.prototype.forEach = Array.prototype.forEach;
+	HTMLCollection.prototype.forEach = Array.prototype.forEach
 script(nomodule).
 	System.config({
 		baseURL: '//npm.jspm.io/',
@@ -22,10 +25,12 @@ script(nomodule).
 
 			var promises = [];
 
-			document.querySelectorAll('script[type="module"]').forEach(function (script) {
+			const targetScripts = document.querySelectorAll('script[type="module"]');
+			for (var i = 0; i < targetScripts.length; i++) {
+				var script = targetScripts[i]
 				console.log("Importing", script, "...");
 				promises.push(System.import(script.src));
-			});
+			}
 
 			Promise.all(promises)
 				.catch(console.error)
