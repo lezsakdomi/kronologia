@@ -4,6 +4,7 @@
   "buttons": {
     "add": "+ New quiz",
     "edit": "✎ Edit",
-    "delete": "🗑 Delete"
+    "delete": "🗑 Delete",
+    "dump": "📖 Learn"
   }
 }

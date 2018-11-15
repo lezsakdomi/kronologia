@@ -244,6 +244,11 @@ quizRouter.get('/edit.html', (req, res) => {
 	return res.render('quiz-form/template', {action: 'update', editable: true})
 })
 
+// noinspection JSUnresolvedFunction
+quizRouter.get('/dump.html', (req, res) => {
+	return res.render('quiz-form/template', {action: false, dump: true})
+})
+
 quizRouter.post('/delete', async (req, res, next) => {
 	try {
 		if ((req.user && req.user.globalId) !== res.locals.quiz.userId) {
