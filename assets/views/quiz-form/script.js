@@ -329,36 +329,47 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-	const trs = [...document.querySelectorAll('tr')]
+	const dates = []; // entities to render
+	
+	[...document.querySelectorAll('tr')]
 		.filter((tr) => tr.querySelector(inputSelector))
 		.filter((tr) => tr.querySelector(inputSelector).value !== '')
-		.filter((tr) => isFinite(tr.querySelector(inputSelector).value))
 		.filter((tr) => {
 			const rect = tr.getBoundingClientRect()
 			return canvasRect.top < rect.top && rect.bottom < canvasRect.bottom
-		})
-		.sort((a, b) => a.querySelector(inputSelector).value
-			.localeCompare(b.querySelector(inputSelector).value, locale, {numeric: true}))
+		}).forEach((tr) => {
+			const rect = tr.getBoundingClientRect()
+			rect.center = {
+				y: (rect.top + rect.bottom) / 2
+			}
 
-	if (trs.length < 2) {
+			tr.querySelector(inputSelector).value.split(/-|, ?/).forEach((part) => {
+				if (!isFinite(part)) return
+				const date = parseInt(part)
+
+				dates.push({rect, date, tr})
+			})
+		})
+
+	if (dates.length < 2) {
 		return
 	}
 
-	const firstValue = parseInt(trs[0].querySelector(inputSelector).value || 0)
-	const firstMiddle = calcMiddle(trs[0])
-	const firstTop = trs[0].getBoundingClientRect().top
-	const firstBottom = trs[0].getBoundingClientRect().bottom
+    const firstDate = dates.reduce((a, v) => a.date < v.date ? a : v, dates[0])
+    const lastDate = dates.reduce((a, v) => a.date > v.date ? a : v, dates[0])
 
-	const lastValue = parseInt(trs[trs.length - 1].querySelector(inputSelector).value || 0)
-	const lastMiddle = calcMiddle(trs[trs.length - 1])
-	const lastTop = trs[trs.length - 1].getBoundingClientRect().top
-	const lastBottom = trs[trs.length - 1].getBoundingClientRect().bottom
+	// Some interval lengths
+    const dateRange = lastDate.date - firstDate.date;
+    const dotYRange = lastDate.rect.center.y - firstDate.rect.center.y;
 
-	const valueRange = lastValue - firstValue
-	const middleRange = lastMiddle - firstMiddle
+	/**
+	 * Variables:
+	 *   dotX, dotY: Where to render the bullet (bullet on the timeline)
+	 *   targetX, targetY: Where to stroke the line
+	 */
 
 	//*
-	let dotX = 0
+	let dotX = 0 // dotX is same, so defined here
 	try {
 		dotX = parseFloat(getComputedStyle(canvas).getPropertyValue('--dotX'))
 		assert(isFinite(dotX), 'dotX is finite')
@@ -367,45 +378,40 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 	}
 	//*/let dotX = 5
 
-	ctx.strokeStyle = (firstMiddle < lastMiddle) ? 'green' : 'red'
+	// Stroke the line for the bullets
+	ctx.strokeStyle = (firstDate.rect.center.y < lastDate.rect.center.y) ? 'green' : 'red'
 	ctx.beginPath()
-	ctx.moveTo(dotX, cy(Math.min(firstTop, lastTop)))
-	ctx.lineTo(dotX, cy(Math.max(firstBottom, lastBottom)))
+	ctx.moveTo(dotX, cy(Math.min(firstDate.rect.top, lastDate.rect.top)))
+	ctx.lineTo(dotX, cy(Math.max(firstDate.rect.bottom, lastDate.rect.bottom)))
 	ctx.stroke()
 
 	ctx.strokeStyle = 'black'
 	ctx.fillStyle = 'black'
-	trs.forEach((tr) => {
-		const middle = calcMiddle(tr)
-		const value = parseInt(tr.querySelector(inputSelector).value || 0)
-
-		const dotY = cy(middleRange / valueRange * (value - firstValue) + firstMiddle)
-		const targetX = cx(tr.getBoundingClientRect().left)
-		const targetY = cy(middle)
+	dates.forEach((date) => {
+		const dotY = cy(dotYRange / dateRange * (date.date - firstDate.date) + firstDate.rect.center.y)
+		const targetX = cx(date.rect.left)
+		const targetY = cy(date.rect.center.y)
 
 		//console.log(tr, dotY, targetX, targetY)
 
+		// Bullet
 		ctx.beginPath()
 		ctx.arc(dotX, dotY, 3, 0, 2 * Math.PI)
 		ctx.fill()
 
+		// Line
 		ctx.beginPath()
 		ctx.moveTo(dotX, dotY)
 		ctx.lineTo(targetX, targetY)
 		ctx.stroke()
 	})
 
-	function cx(x) {
+	function cx(x) { // viewport x to canvas x
 		return (x - canvasRect.left) / canvasRect.width * canvas.width
 	}
 
-	function cy(y) {
+	function cy(y) { // viewport y to canvas y
 		return (y - canvasRect.top) / canvasRect.height * canvas.height
-	}
-
-	function calcMiddle(element) {
-		const rect = element.getBoundingClientRect()
-		return (rect.top + rect.bottom) / 2
 	}
 }
 
