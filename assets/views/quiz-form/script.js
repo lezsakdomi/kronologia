@@ -346,14 +346,13 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 
 	const firstValue = parseInt(trs[0].querySelector(inputSelector).value || 0)
 	const firstMiddle = calcMiddle(trs[0])
-	const firstTop = trs[0].querySelector(inputSelector).getBoundingClientRect().top
-	const firstBottom = trs[0].querySelector(inputSelector).getBoundingClientRect().bottom
+	const firstTop = trs[0].getBoundingClientRect().top
+	const firstBottom = trs[0].getBoundingClientRect().bottom
 
 	const lastValue = parseInt(trs[trs.length - 1].querySelector(inputSelector).value || 0)
 	const lastMiddle = calcMiddle(trs[trs.length - 1])
-	const lastTop = trs[trs.length - 1].querySelector(inputSelector).getBoundingClientRect().top
-	const lastBottom = trs[trs.length - 1].querySelector(inputSelector)
-		.getBoundingClientRect().bottom
+	const lastTop = trs[trs.length - 1].getBoundingClientRect().top
+	const lastBottom = trs[trs.length - 1].getBoundingClientRect().bottom
 
 	const valueRange = lastValue - firstValue
 	const middleRange = lastMiddle - firstMiddle
@@ -573,6 +572,7 @@ function findPositionAndPlace(tr) {
 function fixOrders() {
 	const tbody = document.querySelector('tbody')
 	const trs = [...document.querySelectorAll('tr')]
+		.filter((tr) => tr.querySelector('input[name$="[order]"]'))
 
 	trs.forEach((tr) => tbody.removeChild(tr))
 
