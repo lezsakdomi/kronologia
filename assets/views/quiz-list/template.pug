@@ -16,6 +16,8 @@ mixin recursive-list(quizzes, separator, prefix)
                 li: form
                     a(href=quiz._id + '/form.html')= strippedTitle
                     | &nbsp;
+                    button.dump(formaction=quiz._id + '/dump.html') dump
+                    | &nbsp;
                     button.edit(formaction=quiz._id + '/edit.html') edit
                     | &nbsp;
                     button.delete(formaction=quiz._id + '/delete.html') delete

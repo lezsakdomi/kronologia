@@ -578,6 +578,7 @@ function findPositionAndPlace(tr) {
 function fixOrders() {
 	const tbody = document.querySelector('tbody')
 	const trs = [...document.querySelectorAll('tr')]
+		.filter((tr) => tr.querySelector('input[name$="[order]"]'))
 
 	trs.forEach((tr) => tbody.removeChild(tr))
 

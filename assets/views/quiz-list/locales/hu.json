@@ -4,6 +4,7 @@
   "buttons": {
     "add": "+ Új kvíz létrehozása",
     "edit": "✎ Szerkesztés",
-    "delete": "🗑 Törlés"
+    "delete": "🗑 Törlés",
+    "dump": "📖 Tanulás"
   }
 }

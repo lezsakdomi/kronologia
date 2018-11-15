@@ -19,7 +19,7 @@ html
 			p#invalidquiz You have entered an invalid URL, or you don't have access to this quiz. Or this quiz existed, but somebody has deleted it ☹
 		else
 			canvas#timeline
-			form(action=action method='post')
+			form(action=action || '#' method='post')
 				if editable
 					input(name='title' value=quiz.title placeholder="Title")
 				else
@@ -42,25 +42,35 @@ html
 										else
 											= quiz.entries[eid].question
 									td.answer
-										- attributes = editable ? {value: quiz.entries[eid].answer} : {}
-										input(type='text' name='entries[' + eid + '][answer]' placeholder="Answer")&attributes(attributes)
+										if !editable && dump
+											= quiz.entries[eid].answer
+										- attributes = (editable || dump) ? {value: quiz.entries[eid].answer} : {}
+										input(type=dump ? 'hidden' : 'text' name='entries[' + eid + '][answer]' placeholder="Answer")&attributes(
+										attributes)
 									td.order
-										- attributes = editable ? {value: quiz.entries[eid].order} : {}
-										input(type='number' name='entries[' + eid + '][order]' placeholder="Order")&attributes(attributes)
-										.down
-										.up
-										if editable
-											.remove
+										if !editable && dump
+											| &nbsp;#
+											= quiz.entries[eid].order
+										else
+											- attributes = (editable || dump) ? {value: quiz.entries[eid].order} : {}
+											input(type='number' name='entries[' + eid + '][order]' placeholder="Order")&attributes(
+											attributes)
+											.down
+											.up
+											if editable
+												.remove
 				.row
 					if editable
 						button#add +
 						| &nbsp;
-					input(type='submit' value=action)
-					| &nbsp;
+					if action
+						input(type='submit' value=action)
+						| &nbsp;
 					input(type='checkbox' id='showBg')
 					label(for='showBg') Show colors
-					| &nbsp;
-					button#sort sort
+					if !dump || editable
+						| &nbsp;
+						button#sort sort
 					if editable
 						| &nbsp;
 						button#renumber renumber
