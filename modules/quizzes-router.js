@@ -254,6 +254,12 @@ quizRouter.get('/dump.html', (req, res) => {
 	return res.render('quiz-form/template', {action: false, dump: true})
 })
 
+// noinspection JSUnresolvedFunction
+quizRouter.get('/dump.tsv', (req, res) => {
+	res.type('tsv')
+	return res.end(Object.values(res.locals.quiz.entries).map(({question, answer}) => `${question}\t${answer}`).join("\n")) //TODO this is not very safe
+})
+
 quizRouter.post('/delete', async (req, res, next) => {
 	try {
 		if ((req.user && req.user.globalId) !== res.locals.quiz.userId) {
