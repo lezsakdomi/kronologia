@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 })
 
-function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
+function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus), input.timelineHint') {
 	// Recommended alternative inputSelector: 'tr:not(.slip-reordering) input[name$="[order]"]'
 	const canvas = document.querySelector('canvas#timeline')
 	const canvasRect = canvas.getBoundingClientRect()

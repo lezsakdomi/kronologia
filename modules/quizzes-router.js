@@ -220,6 +220,11 @@ quizRouter.get('/form.html', (req, res) => {
 })
 
 // noinspection JSUnresolvedFunction
+quizRouter.get('/hinted-form.html', (req, res) => {
+	return res.render('quiz-form/template', {action: 'check', editable: false, hint: true})
+})
+
+// noinspection JSUnresolvedFunction
 quizRouter.post('/update', async (req, res, next) => {
 	try {
 		const document = req.body
