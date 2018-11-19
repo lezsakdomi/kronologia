@@ -25,6 +25,12 @@ const i18n = new I18n('quiz-form', {fallBackLng: locale})
 	.defineLabelTranslation('showBg')
 	.defineButtonTranslation('sort')
 	.defineButtonTranslation('renumber')
+	.defineButtonTranslation('toForm')
+	.defineButtonTranslation('backToForm')
+	.defineButtonTranslation('toHintedForm')
+	.defineButtonTranslation('toEdit')
+	.defineButtonTranslation('toDump')
+	.defineButtonTranslation('toTsvDump')
 
 document.addEventListener('DOMContentLoaded', () => prepareDocument(document))
 

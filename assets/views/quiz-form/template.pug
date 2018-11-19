@@ -77,3 +77,16 @@ html
 					if editable
 						| &nbsp;
 						button#renumber renumber
+						| &nbsp;
+						button(formmethod='get' formaction='form.html')#toForm form
+					else if hint
+						| &nbsp;
+						button(formmethod='get' formaction='form.html')#backToForm regular form
+					else
+						| &nbsp;
+						button(formmethod='get' formaction='hinted-form.html')#toHintedForm hinted form
+						| &nbsp;
+						button(formmethod='get' formaction='edit.html')#toEdit edit
+					if dump
+						| &nbsp;
+						button(formmethod='get' formaction='dump.tsv')#toTsvDump TSV
