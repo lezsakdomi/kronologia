@@ -22,6 +22,12 @@
     "submit_update": "⇫ Frissítés",
     "submit_delete": "⚠ Végleges törlés a szerverről ⚠",
     "sort": "⥯ Rendezés válaszok szerint",
-    "renumber": "＃ Újraszámozás"
+    "renumber": "＃ Újraszámozás",
+    "toForm": "🤔 Megnyitás kvízként",
+    "toHintedForm": "⍰ Segítség",
+    "backToForm": "🤔 Vissza a kvízhez",
+    "toEdit": "✎ Szerkesztés",
+    "toDump": "📖 Tanulás",
+    "toTsvDump": "📄 Exportálás"
   }
 }

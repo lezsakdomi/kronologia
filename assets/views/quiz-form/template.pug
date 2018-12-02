@@ -42,11 +42,14 @@ html
 										else
 											= quiz.entries[eid].question
 									td.answer
+										if hint || dump
+											input(type='hidden' class='timelineHint' value=quiz.entries[eid].answer)
 										if !editable && dump
 											= quiz.entries[eid].answer
-										- attributes = (editable || dump) ? {value: quiz.entries[eid].answer} : {}
-										input(type=dump ? 'hidden' : 'text' name='entries[' + eid + '][answer]' placeholder="Answer")&attributes(
-										attributes)
+										else
+											- attributes = (editable || dump) ? {value: quiz.entries[eid].answer} : {}
+											input(type=dump ? 'hidden' : 'text' name='entries[' + eid + '][answer]' placeholder="Answer")&attributes(
+											attributes)
 									td.order
 										if !editable && dump
 											| &nbsp;#
@@ -74,3 +77,16 @@ html
 					if editable
 						| &nbsp;
 						button#renumber renumber
+						| &nbsp;
+						button(formmethod='get' formaction='form.html')#toForm form
+					else if hint
+						| &nbsp;
+						button(formmethod='get' formaction='form.html')#backToForm regular form
+					else
+						| &nbsp;
+						button(formmethod='get' formaction='hinted-form.html')#toHintedForm hinted form
+						| &nbsp;
+						button(formmethod='get' formaction='edit.html')#toEdit edit
+					if dump
+						| &nbsp;
+						button(formmethod='get' formaction='dump.tsv')#toTsvDump TSV

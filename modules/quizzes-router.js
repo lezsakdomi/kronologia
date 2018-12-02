@@ -178,6 +178,7 @@ quizRouter.post('/check', (req, res, next) => {
 						eid,
 						property,
 						message: 'Doesn\'t match',
+						solution: res.locals.quiz.entries[eid][property],
 					})
 				} else {
 					successes.push({
@@ -220,6 +221,11 @@ quizRouter.get('/form.html', (req, res) => {
 })
 
 // noinspection JSUnresolvedFunction
+quizRouter.get('/hinted-form.html', (req, res) => {
+	return res.render('quiz-form/template', {action: 'check', editable: false, hint: true})
+})
+
+// noinspection JSUnresolvedFunction
 quizRouter.post('/update', async (req, res, next) => {
 	try {
 		const document = req.body
@@ -247,6 +253,12 @@ quizRouter.get('/edit.html', (req, res) => {
 // noinspection JSUnresolvedFunction
 quizRouter.get('/dump.html', (req, res) => {
 	return res.render('quiz-form/template', {action: false, dump: true})
+})
+
+// noinspection JSUnresolvedFunction
+quizRouter.get('/dump.tsv', (req, res) => {
+	res.type('tsv')
+	return res.end(Object.values(res.locals.quiz.entries).map(({question, answer}) => `${question}\t${answer}`).join("\n")) //TODO this is not very safe
 })
 
 quizRouter.post('/delete', async (req, res, next) => {
