@@ -545,15 +545,25 @@ function checkForm(force = false) {
 	})
 		.then((response) => response.json())
 		.then((response) => {
-			response.fails.forEach(({eid, property, message}) => {
+			response.fails.forEach(({eid, property, message, solution}) => {
 				const input = document.querySelector(
 					`input[name='entries[${eid}][${property}]']`)
-				input.setCustomValidity(message || 'Invalid')
+				if (force) {
+					input.title = "❌ " + input.value + ", ✓ " + solution
+					input.value = solution
+					input.classList.add('checked', 'corrected')
+					input.setCustomValidity('')
+				} else {
+					input.setCustomValidity(message || 'Invalid')
+				}
 			})
 			response.successes.forEach(({eid, property}) => {
 				const input = document.querySelector(
 					`input[name='entries[${eid}][${property}]']`)
 				input.setCustomValidity('')
+				if (force) {
+					input.classList.add('checked')
+				}
 			})
 		})
 		.catch((e) => {

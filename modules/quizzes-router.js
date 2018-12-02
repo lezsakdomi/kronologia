@@ -178,6 +178,7 @@ quizRouter.post('/check', (req, res, next) => {
 						eid,
 						property,
 						message: 'Doesn\'t match',
+						solution: res.locals.quiz.entries[eid][property],
 					})
 				} else {
 					successes.push({
