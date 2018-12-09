@@ -25,6 +25,12 @@ const i18n = new I18n('quiz-form', {fallBackLng: locale})
 	.defineLabelTranslation('showBg')
 	.defineButtonTranslation('sort')
 	.defineButtonTranslation('renumber')
+	.defineButtonTranslation('toForm')
+	.defineButtonTranslation('backToForm')
+	.defineButtonTranslation('toHintedForm')
+	.defineButtonTranslation('toEdit')
+	.defineButtonTranslation('toDump')
+	.defineButtonTranslation('toTsvDump')
 
 document.addEventListener('DOMContentLoaded', () => prepareDocument(document))
 
@@ -321,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 })
 
-function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
+function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus), input.timelineHint') {
 	// Recommended alternative inputSelector: 'tr:not(.slip-reordering) input[name$="[order]"]'
 	const canvas = document.querySelector('canvas#timeline')
 	const canvasRect = canvas.getBoundingClientRect()
@@ -540,15 +546,25 @@ function checkForm(force = false) {
 	})
 		.then((response) => response.json())
 		.then((response) => {
-			response.fails.forEach(({eid, property, message}) => {
+			response.fails.forEach(({eid, property, message, solution}) => {
 				const input = document.querySelector(
 					`input[name='entries[${eid}][${property}]']`)
-				input.setCustomValidity(message || 'Invalid')
+				if (force) {
+					input.title = "❌ " + input.value + ", ✓ " + solution
+					input.value = solution
+					input.classList.add('checked', 'corrected')
+					input.setCustomValidity('')
+				} else {
+					input.setCustomValidity(message || 'Invalid')
+				}
 			})
 			response.successes.forEach(({eid, property}) => {
 				const input = document.querySelector(
 					`input[name='entries[${eid}][${property}]']`)
 				input.setCustomValidity('')
+				if (force) {
+					input.classList.add('checked')
+				}
 			})
 		})
 		.catch((e) => {

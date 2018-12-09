@@ -22,6 +22,12 @@
     "submit_update": "⇫ Update",
     "submit_delete": "⚠ Completely remove from the server ⚠",
     "sort": "⥯ Sort by answers",
-    "renumber": "＃ Renumber"
+    "renumber": "＃ Renumber",
+    "toForm": "🤔 Open as quiz",
+    "toHintedForm": "⍰ Hints",
+    "backToForm": "🤔 Back to quiz",
+    "toEdit": "✎ Edit",
+    "toDump": "📖 Learn",
+    "toTsvDump": "📄 Export"
   }
 }
