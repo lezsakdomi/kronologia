@@ -343,7 +343,7 @@ function redrawTimeline(inputSelector = 'input[name$="[answer]"]:not(:focus)') {
 				y: (rect.top + rect.bottom) / 2
 			}
 
-			tr.querySelector(inputSelector).value.split(/-|, ?/).forEach((part) => {
+			tr.querySelector(inputSelector).value.split(/ - |-|, ?/).forEach((part) => {
 				if (!isFinite(part)) return
 				const date = parseInt(part)
 
